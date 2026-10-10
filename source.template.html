@@ -1,0 +1,1214 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>블록 너머의 용 · 조현성</title><style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#152729;color:#f7f0d6;font-family:"Malgun Gothic",sans-serif}button{font:inherit;cursor:pointer;color:inherit}canvas{display:block;width:100%;height:100%}#hud{position:fixed;inset:0;pointer-events:none;text-shadow:0 2px 2px #0008}#top{position:absolute;left:28px;top:25px;max-width:480px}.eyebrow{font-size:11px;letter-spacing:3px;color:#d0e3bb;font-weight:bold}.objective{font-size:24px;font-weight:900;margin:9px 0 5px}.sub{font-size:13px;line-height:1.7;color:#e5e9d9}.panel{background:#162629e8;border:1px solid #a8b5a43d;box-shadow:0 8px 30px #0016;backdrop-filter:blur(8px)}#resources{position:absolute;right:28px;top:26px;padding:12px 18px;border-radius:8px;font-size:14px;line-height:1.9}#boss{display:none;position:absolute;top:26px;left:50%;width:360px;transform:translateX(-50%);text-align:center;font-size:14px;font-weight:bold}#bossbar{height:9px;background:#251831;border:1px solid #ceaae2;margin-top:8px}#bossfill{height:100%;background:#b977d1}#cross{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font:26px monospace;color:#fff;opacity:.9}#target{position:absolute;top:calc(50% + 28px);left:50%;transform:translateX(-50%);text-align:center;background:#132326be;padding:5px 12px;border-radius:4px;font-size:12px;min-width:50px}#mine{position:absolute;width:110px;height:4px;left:calc(50% - 55px);top:calc(50% + 58px);background:#1e251daa;display:none}#minefill{height:100%;background:#ecc672}#toast{position:absolute;left:50%;top:23%;transform:translateX(-50%);font-size:17px;font-weight:bold;color:#ffe0a4;text-align:center;max-width:650px}#bottom{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:min(800px,94vw)}#vitals{display:flex;align-items:center;justify-content:space-between;margin:0 6px 10px;font-size:13px}.hearts{color:#ed715d;font-size:23px;letter-spacing:1px}#growth{font-size:12px;color:#ffd685;text-align:right}#hotbar{display:flex;gap:5px;padding:7px;background:#192728e8;border:1px solid #d9d5af6b;border-radius:8px}#hotbar button{pointer-events:auto;width:calc(100% / 9);height:66px;background:#31443c;border:1px solid #8b9e7944;border-radius:3px;position:relative;transition:.12s;color:#d7dbbe}#hotbar button.active{outline:2px solid #ffe3a1;background:#64714b;transform:translateY(-3px);color:#fff}#hotbar button.unavailable{opacity:.42}.slotnum{position:absolute;left:5px;top:3px;font-size:10px}.symbol{font-size:23px;display:block;line-height:29px}.slotlabel{font-size:10px}.slotcount{position:absolute;right:4px;bottom:4px;font-size:11px;color:#fff}#help{text-align:center;margin-top:10px;font-size:11px;color:#e4e8d6}#hurt{position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 140px #d8232399;opacity:0}#modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#102326e6,#10232699);z-index:4}#card{width:min(700px,92vw);padding:38px;border-radius:12px}h1{font-size:48px;line-height:1.14;margin:14px 0 20px;letter-spacing:-2px}h2{font-size:29px;margin:8px 0 18px}.lead{color:#e2e4ce;font-size:15px;line-height:1.9}#begin,.primary{border:1px solid #fff0b4;background:#ddbc78;color:#192c27;font-weight:bold;border-radius:5px;padding:14px 28px;box-shadow:0 4px #796443}.small{font-size:12px;color:#b7c7b4;line-height:1.7}.keys{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px 0 24px;color:#dce6d3;font-size:13px}kbd{background:#43534c;padding:3px 6px;border:1px solid #bac7ac55;border-radius:3px;font:11px monospace}#craft{position:fixed;z-index:5;inset:0;background:#102522be;display:none;align-items:center;justify-content:center}.craftcard{width:min(610px,92vw);padding:28px;border-radius:10px}.recipes{display:grid;grid-template-columns:1fr 1fr;gap:10px}.recipe{background:#334c3f;border:1px solid #abc79455;border-radius:5px;padding:15px;text-align:left}.recipe b{display:block;margin-bottom:8px}.recipe span{font-size:12px;color:#cfddbb}.recipe:disabled{opacity:.4;cursor:not-allowed}.close{border:1px solid #779181;background:transparent;padding:10px 18px;float:right;border-radius:4px}#error{display:none;position:fixed;z-index:9;inset:0;background:#152729;padding:10vh 10vw;white-space:pre-wrap;line-height:1.8}#pauseHint{position:absolute;right:28px;bottom:28px;font-size:11px;color:#dae3ce}#miniStatus{position:absolute;left:28px;bottom:28px;font-size:11px;color:#e6dfbf;line-height:1.9}#loading{margin-top:18px;font-size:13px;color:#c8d3bb}#journey{display:flex;gap:10px;margin:22px 0;font-size:11px;color:#c6d5bb}#journey span{padding:7px 10px;border-top:2px solid #719885}#heroBadge{width:120px;height:180px;float:right;margin:10px;background:linear-gradient(#617b6355,#172d2555);border-radius:8px}#endStats{font-size:14px;line-height:2.1;color:#e2e9d4;margin:20px 0}#portrait{position:absolute;left:25px;bottom:95px;width:90px;height:130px;opacity:.9;pointer-events:none}@media(max-width:900px){#top{left:15px;top:15px;max-width:350px}.objective{font-size:19px}#resources{right:15px;top:15px;font-size:11px;padding:8px}#boss{top:110px;width:300px}#miniStatus,#pauseHint{display:none}h1{font-size:36px}#card{padding:25px}.slotlabel{font-size:9px}#portrait{display:none}}
+</style><style>#lawsys{position:absolute;right:28px;top:158px;width:306px;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.55}#lawsysHead{font-weight:bold;color:#f0b8a4;letter-spacing:.5px}#lawsysBar{height:7px;margin:6px 0 5px;background:#2b1d1d;border:1px solid #b47474}#lawsysFill{height:100%;width:0%;background:#d96a55;transition:width .25s}#lawsysFine{color:#ffe0a4}#lawsysList{margin-top:5px;max-height:92px;overflow:hidden}#lawsysList div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e9d7c8;font-size:11px}#lawsysRecord{margin-top:10px;font-size:13px;line-height:1.7;color:#f2d5c2;text-align:left}</style></head><body>
+<canvas id="view"></canvas><div id="hud"><div id="top"><div class="eyebrow">조현성의 마인크래프트 · 짧은 생존 여정</div><div class="objective" id="objective">내 손으로 건너는 길</div><div class="sub" id="hint">나무와 돌을 캐서 용을 향할 준비를 하세요.</div></div><div id="resources" class="panel"></div><div id="lawsys" class="panel"><div id="lawsysHead">⚖ 대한민국 법 적용 · 수배 청정</div><div id="lawsysBar"><div id="lawsysFill"></div></div><div id="lawsysFine">총 벌금 0만원 · 위반 0건</div><div id="lawsysList"></div></div><div id="boss"><span id="bossname">협곡의 용</span><div id="bossbar"><div id="bossfill"></div></div></div><div id="cross">+</div><div id="target"></div><div id="mine"><div id="minefill"></div></div><div id="toast"></div><div id="bottom"><div id="vitals"><div><span class="hearts" id="hearts"></span> <span id="armorText"></span></div><div id="growth"></div></div><div id="hotbar"></div><div id="help">WASD 이동 · 마우스/방향키 시선 · Space 점프 · Shift 가장자리 보호 · 좌클릭 사용 · 우클릭/F 설치 · E 제작 · Esc 일시정지</div></div><div id="miniStatus"></div><div id="pauseHint">1–9 도구 선택 · Q 빈손 · V 내 캐릭터</div></div><div id="hurt"></div>
+<div id="modal"><div id="card" class="panel"><div class="eyebrow">1학년 2반 22번 · 조현성</div><h1>블록 너머의 용</h1><div class="lead">한 번뿐인 생명, 아직 이어지지 않은 길.<br>나무와 돌을 캐고, 강에 다리를 놓고, 용을 쓰러뜨리세요.<br><b>함께 싸워 온 무기는 실제로 더 강해집니다.</b></div><div id="journey"><span>01 채굴과 준비</span><span>02 길 만들기</span><span>03 생존과 성장</span><span>04 용 처치</span></div><div class="keys"><span><kbd>WASD</kbd> 이동 · <kbd>Space</kbd> 점프</span><span><kbd>1–9</kbd> 도구 · <kbd>E</kbd> 캠프 제작</span><span>좌클릭 채굴 / 공격 · 활은 누르고 놓기</span><span>우클릭 블록 설치 · <kbd>Shift</kbd> 안전한 가장자리</span></div><button id="begin" disabled>자산을 불러오는 중…</button><div id="loading">내장 3D 모델 준비 중</div><p class="small">약 4~5분의 대표 구간 · 사망하면 이번 판은 즉시 종료됩니다.<br><b>⚖ 이 세계에는 대한민국 법이 적용됩니다 · 행동이 법에 저촉되면 벌금과 수배가 쌓이고, 수배가 가득 차면 체포됩니다.</b><br>마우스 잠금이 지원되지 않아도 드래그와 방향키로 시선을 돌릴 수 있습니다.</p></div></div>
+<div id="craft"><div class="craftcard panel"><button class="close" id="closeCraft">돌아가기 · E</button><div class="eyebrow">시작 캠프</div><h2>가져온 재료로 준비하기</h2><div id="craftInv" class="sub"></div><div class="recipes" id="recipes"></div><p class="small">칼·활·갑옷은 한 번 제작합니다. 화살과 식량은 다시 마련할 수 있습니다.<br>이번 여정의 간소한 레시피입니다. 음식은 캠프에 장작을 주고 받습니다.</p></div></div><div id="error"></div>
+<!--OFFLINE_RUNTIME--><!--EMBEDDED_ASSETS--><script>
+/* 조현성 / task24. Actual task23 GLBs, embedded by the offline packer.
+ * Coordinates: glTF Y-up, metre scale; source Blender forward -Y becomes +Z.
+ * Keep source pivots, transforms and bone hierarchy. No runtime fetch/import.
+ */
+(function (global) {
+  'use strict';
+
+  const IDS = Object.freeze([
+    'hero', 'zombie', 'skeleton', 'enderman', 'piglin', 'creeper', 'dragon',
+    'pickaxe', 'axe', 'sword', 'bow', 'arrow', 'food', 'eye_of_ender',
+    'armor_helmet', 'armor_chest', 'armor_leggings', 'armor_boots',
+    'grass_block', 'dirt_block', 'stone_block', 'iron_ore',
+    'wood_log', 'wood_planks', 'leaf_block', 'water_block'
+  ]);
+  const ALIASES = Object.freeze({
+    player: 'hero', eye: 'eye_of_ender', helmet: 'armor_helmet',
+    chest: 'armor_chest', leggings: 'armor_leggings', boots: 'armor_boots',
+    grass: 'grass_block', dirt: 'dirt_block', stone: 'stone_block', ore: 'iron_ore',
+    log: 'wood_log', wood: 'wood_log', planks: 'wood_planks', leaves: 'leaf_block', water: 'water_block'
+  });
+  const CLIP_MAPS = Object.freeze({
+    hero: Object.freeze({ Idle: 'idle', Walk: 'walk', Attack: 'melee_attack', Hit: 'hit', Death: 'death', Bow: 'bow_draw_release', Mine: 'mine', Place: 'place' }),
+    zombie: Object.freeze({ Idle: 'idle', Walk: 'walk', Attack: 'attack', Hit: 'hit', Death: 'death' }),
+    skeleton: Object.freeze({ Idle: 'idle', Walk: 'walk', Attack: 'attack', Hit: 'hit', Death: 'death', Bow: 'bow_shoot' }),
+    enderman: Object.freeze({ Idle: 'idle', Walk: 'walk', Attack: 'attack', Hit: 'hit', Death: 'death', Aggro: 'aggro', Teleport: 'teleport_gesture' }),
+    piglin: Object.freeze({ Idle: 'idle', Walk: 'walk', Attack: 'attack', Hit: 'hit', Death: 'death' }),
+    creeper: Object.freeze({ Idle: 'creeper_idle', Walk: 'creeper_walk', Attack: 'creeper_attack_explode', Hit: 'creeper_hit', Death: 'creeper_death' }),
+    dragon: Object.freeze({ Idle: 'dragon_idle', Fly: 'dragon_fly', Attack: 'dragon_attack', Hit: 'dragon_hurt', Death: 'dragon_death' }),
+    bow: Object.freeze({ Idle: 'Idle', Bow: 'DrawRelease', Attack: 'DrawRelease' })
+  });
+  const gltfs = Object.create(null);
+  const metadata = Object.create(null);
+  const progressListeners = new Set();
+  let loadingPromise = null;
+  let completed = 0;
+  let lastLoadedId = null;
+
+  function runtime() {
+    const api = global.Game3D;
+    if (!api || !api.THREE || typeof api.cloneSkinned !== 'function' || typeof api.loadEmbeddedGLB !== 'function') {
+      throw new Error('GameAssets: Game3D 로컬 런타임을 먼저 포함해야 합니다.');
+    }
+    return api;
+  }
+
+  function resolveId(input) {
+    const key = String(input);
+    const id = ALIASES[key] || key;
+    if (!IDS.includes(id)) throw new Error('GameAssets: 알 수 없는 자산 id: ' + key);
+    return id;
+  }
+
+  function notifyProgress(id) {
+    lastLoadedId = id;
+    for (const listener of progressListeners) {
+      listener(completed, IDS.length, id, { loaded: completed, total: IDS.length, id, ratio: completed / IDS.length });
+    }
+  }
+
+  function measure(gltf) {
+    const { THREE } = runtime();
+    const materials = new Set();
+    const counts = { meshes: 0, skinnedMeshes: 0, bones: 0 };
+    gltf.scene.updateMatrixWorld(true);
+    gltf.scene.traverse(function (object) {
+      if (object.isBone) counts.bones++;
+      if (!object.isMesh) return;
+      counts.meshes++;
+      if (object.isSkinnedMesh) { counts.skinnedMeshes++; object.skeleton.update(); }
+      const list = Array.isArray(object.material) ? object.material : [object.material];
+      list.filter(Boolean).forEach(function (material) { materials.add(material); });
+    });
+    const box = new THREE.Box3().setFromObject(gltf.scene, true);
+    const size = box.getSize(new THREE.Vector3());
+    const numbers = [...box.min.toArray(), ...box.max.toArray(), ...size.toArray()];
+    if (!counts.meshes || box.isEmpty() || !numbers.every(Number.isFinite)) {
+      throw new Error('GLB에 유효한 메시 또는 경계가 없습니다.');
+    }
+    return Object.freeze({
+      ...counts, materials: materials.size, skins: gltf.parser.json.skins?.length || 0,
+      clipNames: Object.freeze(gltf.animations.map(function (clip) { return clip.name; })),
+      clipDurations: Object.freeze(Object.fromEntries(gltf.animations.map(function (clip) { return [clip.name, clip.duration]; }))),
+      bounds: Object.freeze({ min: Object.freeze(box.min.toArray()), max: Object.freeze(box.max.toArray()), size: Object.freeze(size.toArray()) }),
+      coordinates: 'glTF Y-up / metres / source forward becomes +Z / original pivot preserved'
+    });
+  }
+
+  async function load(onProgress) {
+    const { loadEmbeddedGLB } = runtime();
+    if (!global.__ASSETS__) throw new Error('GameAssets: HTML 안의 __ASSETS__ 데이터가 없습니다.');
+    if (typeof onProgress === 'function') {
+      progressListeners.add(onProgress);
+      onProgress(completed, IDS.length, lastLoadedId, { loaded: completed, total: IDS.length, id: lastLoadedId, ratio: completed / IDS.length });
+    }
+    if (!loadingPromise) {
+      loadingPromise = (async function () {
+        for (const id of IDS) {
+          const source = global.__ASSETS__[id];
+          if (!source || typeof source.base64 !== 'string' || !source.base64.length) {
+            throw new Error('GameAssets: 내장 GLB 누락: ' + id);
+          }
+        }
+        // Keep decode concurrency bounded on classroom PCs; already loaded models survive a retry.
+        for (let first = 0; first < IDS.length; first += 4) {
+          const batchResults = await Promise.allSettled(IDS.slice(first, first + 4).map(async function (id) {
+            if (gltfs[id]) return;
+            let gltf;
+            try {
+              gltf = await loadEmbeddedGLB(global.__ASSETS__, id);
+              metadata[id] = measure(gltf);
+              const map = CLIP_MAPS[id] || {};
+              for (const clipName of new Set(Object.values(map))) {
+                if (!gltf.animations.some(function (clip) { return clip.name === clipName; })) {
+                  throw new Error('표준 동작에 연결한 원본 클립 누락: ' + clipName);
+                }
+              }
+            } catch (error) {
+              throw new Error('GameAssets [' + id + '] 로드 실패: ' + (error.message || error), { cause: error });
+            }
+            gltfs[id] = gltf;
+            completed++;
+            notifyProgress(id);
+          }));
+          const failure = batchResults.find(function (result) { return result.status === 'rejected'; });
+          if (failure) throw failure.reason;
+        }
+        return api;
+      })();
+      loadingPromise.catch(function () { loadingPromise = null; });
+    }
+    try { return await loadingPromise; }
+    finally { if (typeof onProgress === 'function') progressListeners.delete(onProgress); }
+  }
+
+  function template(input) {
+    const id = resolveId(input);
+    if (!gltfs[id]) throw new Error('GameAssets [' + id + ']: 먼저 await GameAssets.load()가 필요합니다.');
+    return { id, gltf: gltfs[id] };
+  }
+
+  function cloneMaterials(root) {
+    const cloned = new Map();
+    function copy(material) {
+      if (!material) return material;
+      if (!cloned.has(material)) cloned.set(material, material.clone());
+      return cloned.get(material);
+    }
+    root.traverse(function (object) {
+      if (!object.isMesh) return;
+      object.material = Array.isArray(object.material) ? object.material.map(copy) : copy(object.material);
+    });
+    return Array.from(cloned.values());
+  }
+
+  function make(input) {
+    const { id, gltf } = template(input);
+    const { THREE, cloneSkinned } = runtime();
+    const root = metadata[id].skinnedMeshes ? cloneSkinned(gltf.scene) : gltf.scene.clone(true);
+    const ownedMaterials = cloneMaterials(root);
+    root.userData.gameAssetId = id;
+    root.userData.gameAssetCoordinates = 'Y-up';
+    const mixer = new THREE.AnimationMixer(root);
+    const clips = gltf.animations;
+    const clipMap = CLIP_MAPS[id] || Object.freeze({});
+    const actions = new Map();
+    let currentAction = null, currentClip = null, finished = false, disposed = false;
+    const missing = new Set();
+
+    function resolveClip(name) {
+      const requested = String(name);
+      const normalized = Object.keys(clipMap).find(function (key) { return key.toLowerCase() === requested.toLowerCase(); });
+      const realName = normalized ? clipMap[normalized] : requested;
+      return clips.find(function (clip) { return clip.name === realName; }) || clips.find(function (clip) { return clip.name.toLowerCase() === realName.toLowerCase(); }) || null;
+    }
+
+    function play(name, options) {
+      if (disposed) throw new Error('GameAssets [' + id + ']: 이미 해제된 인스턴스입니다.');
+      const { loop = true, reset = true, speed = 1 } = options || {};
+      if (!Number.isFinite(speed) || speed < 0) throw new Error('GameAssets.play speed는 0 이상의 유효한 수여야 합니다.');
+      const clip = resolveClip(name);
+      if (!clip) {
+        // Do not pretend an absent clip is the requested action.
+        if (!missing.has(String(name))) { missing.add(String(name)); console.warn('GameAssets [' + id + '] 지원하지 않는 동작: ' + name); }
+        return null;
+      }
+      let action = actions.get(clip);
+      if (!action) { action = mixer.clipAction(clip); actions.set(clip, action); }
+      const changed = currentAction !== action;
+      if (changed && currentAction) currentAction.stop();
+      if (reset || changed) { action.reset(); finished = false; }
+      action.enabled = true;
+      action.clampWhenFinished = !loop;
+      action.setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, loop ? Infinity : 1);
+      action.setEffectiveTimeScale(speed);
+      action.setEffectiveWeight(1);
+      if (reset || changed || !finished) action.paused = false;
+      action.play();
+      currentAction = action; currentClip = clip;
+      mixer.update(0);
+      root.updateMatrixWorld(true);
+      return action;
+    }
+
+    function onFinished(event) { if (event.action === currentAction) finished = true; }
+    mixer.addEventListener('finished', onFinished);
+    const instance = {
+      id, root, mixer, clips, clipMap, play, resolveClip,
+      update(dt) {
+        if (disposed) return;
+        if (!Number.isFinite(dt) || dt < 0) throw new Error('GameAssets.update dt는 0 이상의 초 단위 수여야 합니다.');
+        mixer.update(dt);
+      },
+      stop() { mixer.stopAllAction(); currentAction = null; currentClip = null; finished = false; },
+      dispose() {
+        if (disposed) return;
+        disposed = true; mixer.stopAllAction(); mixer.removeEventListener('finished', onFinished); mixer.uncacheRoot(root);
+        root.removeFromParent(); ownedMaterials.forEach(function (material) { material.dispose(); });
+        // Geometry and textures are shared with the immutable loaded template; do not dispose them here.
+      },
+      get currentAction() { return currentAction; },
+      get currentClip() { return currentClip ? currentClip.name : null; },
+      get finished() { return finished; },
+      get disposed() { return disposed; },
+      get missingClips() { return Array.from(missing); }
+    };
+    return instance;
+  }
+
+  function staticClone(input, options) {
+    const { id, gltf } = template(input);
+    const root = metadata[id].skinnedMeshes ? runtime().cloneSkinned(gltf.scene) : gltf.scene.clone(true);
+    if (options && options.cloneMaterials) cloneMaterials(root);
+    root.userData.gameAssetId = id;
+    root.userData.gameAssetCoordinates = 'Y-up';
+    return root;
+  }
+
+  const api = {
+    load, make, static: staticClone, resolveId, gltfs, metadata,
+    ids: IDS, aliases: ALIASES, clipMaps: CLIP_MAPS,
+    coordinates: Object.freeze({ up: '+Y', forward: '+Z', unit: 'metre', autoCentered: false, autoScaled: false, originalPivotsPreserved: true }),
+    get ready() { return completed === IDS.length; },
+    get progress() { return { loaded: completed, total: IDS.length, id: lastLoadedId, ratio: completed / IDS.length }; }
+  };
+  global.GameAssets = api;
+})(window);
+
+/* Jo Hyeonseong: editable voxel terrain using the student's task23 GLB blocks. */
+(function (global) {
+  'use strict';
+
+  const TYPES = Object.freeze({
+    grass: 'grass_block', dirt: 'dirt_block', stone: 'stone_block',
+    ore: 'iron_ore', log: 'wood_log', planks: 'wood_planks',
+    leaves: 'leaf_block', water: 'water_block'
+  });
+  const ALIASES = Object.freeze(Object.fromEntries([
+    ...Object.keys(TYPES).map(type => [type, type]),
+    ...Object.entries(TYPES).map(([type, id]) => [id, type]),
+    ...Object.entries(TYPES).map(([type, id]) => ['props-' + id, type])
+  ]));
+  const NEIGHBORS = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]];
+  const EPSILON = 1e-7;
+  const key = (x, y, z) => `${x},${y},${z}`;
+  const columnKey = (x, z) => `${x},${z}`;
+  const integerCell = (x, y, z) => Number.isSafeInteger(x) && Number.isSafeInteger(y) && Number.isSafeInteger(z);
+  const solid = type => type !== null && type !== undefined && type !== 'water';
+
+  class VoxelWorld {
+    constructor(scene) {
+      if (!global.Game3D || !global.Game3D.THREE) throw new Error('Load Game3D before VoxelWorld.');
+      if (!scene || typeof scene.add !== 'function') throw new TypeError('VoxelWorld requires a THREE.Scene.');
+      this.THREE = global.Game3D.THREE;
+      this.scene = scene;
+      this.cells = new Map();
+      this.columns = new Map();
+      this.templates = new Map();
+      this.buckets = new Map();
+      this.dirtyTypes = new Set();
+      this.meshes = [];
+      this.solidMeshes = [];
+      this.bounds = { minX: -10, maxX: 10, minZ: -44, maxZ: 14 };
+      this.root = new this.THREE.Group();
+      this.root.name = 'StudentVoxelWorld';
+      this.scene.add(this.root);
+      this.initialRiverCells = [];
+      this.metadata = {};
+    }
+
+    get(x, y, z) {
+      if (!integerCell(x, y, z)) return null;
+      return this.cells.get(key(x, y, z)) || null;
+    }
+
+    _dirtyAround(x, y, z, oldType, newType) {
+      if (oldType) this.dirtyTypes.add(oldType);
+      if (newType) this.dirtyTypes.add(newType);
+      for (const [dx, dy, dz] of NEIGHBORS) {
+        const neighbor = this.get(x + dx, y + dy, z + dz);
+        if (neighbor) this.dirtyTypes.add(neighbor);
+      }
+    }
+
+    set(x, y, z, inputType) {
+      if (!integerCell(x, y, z) || typeof inputType !== 'string') return false;
+      const type = ALIASES[inputType];
+      if (!type) return false;
+      const oldType = this.get(x, y, z);
+      if (oldType === type) return false;
+      this.cells.set(key(x, y, z), type);
+      const ck = columnKey(x, z);
+      let column = this.columns.get(ck);
+      if (!column) this.columns.set(ck, column = new Map());
+      column.set(y, type);
+      this._dirtyAround(x, y, z, oldType, type);
+      return true;
+    }
+
+    remove(x, y, z) {
+      const oldType = this.get(x, y, z);
+      if (!oldType) return null;
+      this.cells.delete(key(x, y, z));
+      const ck = columnKey(x, z), column = this.columns.get(ck);
+      column.delete(y);
+      if (column.size === 0) this.columns.delete(ck);
+      this._dirtyAround(x, y, z, oldType, null);
+      return oldType;
+    }
+
+    height(x, z) {
+      if (!Number.isFinite(x) || !Number.isFinite(z)) return -8;
+      const column = this.columns.get(columnKey(Math.floor(x), Math.floor(z)));
+      if (!column) return -8;
+      let top = -Infinity;
+      for (const [y, type] of column) if (solid(type)) top = Math.max(top, y + 1);
+      return top === -Infinity ? -8 : top;
+    }
+
+    collideBox(min, max) {
+      if (!min || !max || !['x', 'y', 'z'].every(axis => Number.isFinite(min[axis]) && Number.isFinite(max[axis]) && max[axis] > min[axis])) return false;
+      // Exact contact at a voxel face is allowed; only positive-volume overlap collides.
+      const x0 = Math.floor(min.x + EPSILON), x1 = Math.ceil(max.x - EPSILON) - 1;
+      const y0 = Math.floor(min.y + EPSILON), y1 = Math.ceil(max.y - EPSILON) - 1;
+      const z0 = Math.floor(min.z + EPSILON), z1 = Math.ceil(max.z - EPSILON) - 1;
+      for (let x = x0; x <= x1; x++) {
+        for (let y = y0; y <= y1; y++) {
+          for (let z = z0; z <= z1; z++) if (solid(this.get(x, y, z))) return true;
+        }
+      }
+      return false;
+    }
+
+    _tree(x, z, top, record) {
+      for (let dy = 0; dy < 3; dy++) this.set(x, top + dy, z, 'log');
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dz = -1; dz <= 1; dz++) {
+          if (dx || dz) this.set(x + dx, top + 2, z + dz, 'leaves');
+          this.set(x + dx, top + 3, z + dz, 'leaves');
+        }
+      }
+      this.set(x, top + 4, z, 'leaves');
+      record.push({ x, z, groundTop: top, logs: 3 });
+    }
+
+    build() {
+      this.cells.clear();
+      this.columns.clear();
+      this.initialRiverCells = [];
+      this.dirtyTypes = new Set(Object.keys(TYPES));
+      const trees = [], exposedOre = [], startingStone = [];
+
+      for (let x = -10; x <= 10; x++) {
+        for (let z = -44; z <= 14; z++) {
+          if (z >= 0 && z <= 4) {
+            // Five full cells of open river separate the banks. Water is never solid.
+            this.set(x, -5, z, 'stone');
+            this.set(x, -2, z, 'water');
+            this.initialRiverCells.push({ x, y: -2, z });
+          } else if (z <= -9) {
+            this.set(x, -2, z, 'stone');
+            for (let y = -1; y <= 1; y++) this.set(x, y, z, 'dirt');
+            this.set(x, 2, z, 'grass');
+          } else {
+            this.set(x, -2, z, 'dirt');
+            this.set(x, -1, z, 'grass');
+          }
+        }
+      }
+
+      // Mineable, visible side cliffs. There is no invisible plane beyond the map.
+      for (const x of [-11, 11]) {
+        for (let z = -44; z <= 14; z++) {
+          const top = (z <= -9 ? 6 : 3) + ((Math.abs(z) + (x > 0 ? 1 : 0)) % 5 === 0 ? 1 : 0);
+          for (let y = -5; y < top; y++) this.set(x, y, z, 'stone');
+        }
+      }
+
+      // Small side hills add relief while the central route and arena remain open.
+      for (const [cx, cz] of [[-8, 8], [8, 10], [-8, -5], [8, -5], [-8, -18], [8, -25]]) {
+        const base = cz <= -9 ? 3 : 0;
+        for (let dx = -1; dx <= 1; dx++) {
+          for (let dz = -1; dz <= 1; dz++) this.set(cx + dx, base, cz + dz, 'grass');
+        }
+        this.set(cx, base + 1, cz, 'grass');
+      }
+
+      // Fifteen directly accessible stone blocks; no initial inventory is needed.
+      for (let x = 4; x <= 6; x++) {
+        for (let z = 5; z <= 8; z++) {
+          this.set(x, 0, z, 'stone');
+          startingStone.push({ x, y: 0, z });
+        }
+        this.set(x, 1, 6, 'stone');
+        startingStone.push({ x, y: 1, z: 6 });
+      }
+      // Nine ore cells, seven initially uncovered; the remaining two are below stone.
+      for (let x = 3; x <= 5; x++) {
+        for (let z = 8; z <= 10; z++) {
+          this.set(x, -1, z, 'ore');
+          if (!solid(this.get(x, 0, z))) exposedOre.push({ x, y: -1, z });
+        }
+      }
+      this._tree(-3, 9, 0, trees);
+      this._tree(-5, 12, 0, trees);
+      this._tree(8, 13, 0, trees);
+      this._tree(-8, -7, 0, trees);
+      this._tree(8, -15, 3, trees);
+      this._tree(-8, -24, 3, trees);
+
+      const counts = {};
+      for (const type of this.cells.values()) counts[type] = (counts[type] || 0) + 1;
+      this.metadata = {
+        student: '조현성 / 1학년 2반 22번', game: '마인크래프트',
+        coordinateConvention: 'Y-up; integer cells occupy [x,x+1] × [y,y+1] × [z,z+1]; forward -Z',
+        start: { x: 0, y: 0, z: 10, yMeaning: 'feet' },
+        bounds: { ...this.bounds },
+        initialRiverCells: this.initialRiverCells.length,
+        river: { minZ: 0, maxZ: 4, widthCells: 5, waterSurfaceY: -1.3, floorTopY: -4, solidAtBankHeight: 0 },
+        plateau: { minZ: -44, maxZ: -9, baseTopY: 3, surfaceCellCount: 21 * 36, centralFaceMineable: true },
+        arena: { minX: -9, maxX: 9, minZ: -44, maxZ: -32, topY: 3, surfaceCellCount: 19 * 13 },
+        startingStoneCells: startingStone,
+        exposedOreCells: exposedOre,
+        trees,
+        typeCounts: counts,
+        totalCells: this.cells.size,
+        sourceAssets: { ...TYPES },
+        placementRule: 'set permits replacement; the caller checks inventory, adjacency and player intersection before placement',
+        outsideFloor: false
+      };
+      this.rebuild();
+      return this;
+    }
+
+    _template(type) {
+      if (this.templates.has(type)) return this.templates.get(type);
+      const assets = global.GameAssets, assetId = TYPES[type];
+      if (!assets) throw new Error('Load GameAssets before building the voxel world.');
+      let source = assets.gltfs && assets.gltfs[assetId] && assets.gltfs[assetId].scene;
+      if (!source && typeof assets.static === 'function') source = assets.static(assetId);
+      if (!source) throw new Error('Missing original voxel GLB: ' + assetId);
+      source.updateWorldMatrix(true, true);
+      const parts = [];
+      source.traverse(mesh => {
+        if (!mesh.isMesh || mesh.isSkinnedMesh || !mesh.geometry) return;
+        const geometry = mesh.geometry.clone();
+        // Bake the actual GLB hierarchy once. Instance transforms then only translate.
+        geometry.applyMatrix4(mesh.matrixWorld);
+        if (!geometry.attributes.normal) geometry.computeVertexNormals();
+        geometry.computeBoundingBox();
+        geometry.computeBoundingSphere();
+        parts.push({ geometry, material: mesh.material });
+      });
+      if (!parts.length) throw new Error('Original voxel GLB contains no static mesh: ' + assetId);
+      this.templates.set(type, parts);
+      return parts;
+    }
+
+    _visible(x, y, z, type) {
+      if (type === 'water') return true;
+      return NEIGHBORS.some(([dx, dy, dz]) => !solid(this.get(x + dx, y + dy, z + dz)));
+    }
+
+    rebuild() {
+      if (!this.dirtyTypes.size) return false;
+      const THREE = this.THREE, positions = new Map();
+      for (const type of this.dirtyTypes) positions.set(type, []);
+      for (const [cellKey, type] of this.cells) {
+        if (!positions.has(type)) continue;
+        const [x, y, z] = cellKey.split(',').map(Number);
+        if (this._visible(x, y, z, type)) positions.get(type).push({ x, y, z });
+      }
+      const matrix = new THREE.Matrix4(), pos = new THREE.Vector3(), scale = new THREE.Vector3(), rotation = new THREE.Quaternion();
+      for (const [type, cells] of positions) {
+        for (const mesh of this.buckets.get(type) || []) {
+          this.root.remove(mesh);
+          // Template geometries/materials are shared; dispose only instance-specific state.
+          if (typeof mesh.dispose === 'function') mesh.dispose();
+        }
+        const meshes = [];
+        if (cells.length) {
+          for (const part of this._template(type)) {
+            const mesh = new THREE.InstancedMesh(part.geometry, part.material, cells.length);
+            mesh.name = 'Voxel_' + type;
+            mesh.userData.voxelType = type;
+            mesh.userData.voxelCells = cells;
+            mesh.castShadow = type !== 'water';
+            mesh.receiveShadow = true;
+            for (let i = 0; i < cells.length; i++) {
+              const c = cells[i];
+              pos.set(c.x + 0.5, c.y, c.z + 0.5);
+              // Water has a visual surface at -1.3 for its initial y=-2 cell.
+              scale.set(1, type === 'water' ? 0.7 : 1, 1);
+              matrix.compose(pos, rotation, scale);
+              mesh.setMatrixAt(i, matrix);
+            }
+            mesh.instanceMatrix.needsUpdate = true;
+            mesh.computeBoundingBox();
+            mesh.computeBoundingSphere();
+            this.root.add(mesh);
+            meshes.push(mesh);
+          }
+        }
+        this.buckets.set(type, meshes);
+      }
+      this.meshes = Array.from(this.buckets.values()).flat();
+      this.solidMeshes = this.meshes.filter(mesh => mesh.userData.voxelType !== 'water');
+      this.root.updateWorldMatrix(true, true);
+      this.dirtyTypes.clear();
+      return true;
+    }
+
+    pick(raycaster, maxDistance = 5) {
+      if (!raycaster || typeof raycaster.intersectObjects !== 'function' || !Number.isFinite(maxDistance) || maxDistance <= 0) return null;
+      this.rebuild();
+      this.root.updateWorldMatrix(true, true);
+      const previousFar = raycaster.far;
+      raycaster.far = Math.min(previousFar, maxDistance);
+      let hits;
+      try { hits = raycaster.intersectObjects(this.solidMeshes, false); }
+      finally { raycaster.far = previousFar; }
+      for (const hit of hits) {
+        if (hit.distance > maxDistance || hit.instanceId === undefined || !hit.face) continue;
+        const cell = hit.object.userData.voxelCells[hit.instanceId];
+        if (!cell) continue;
+        const type = this.get(cell.x, cell.y, cell.z);
+        if (!solid(type)) continue;
+        const n = hit.face.normal.clone().transformDirection(hit.object.matrixWorld).normalize();
+        const normal = new this.THREE.Vector3();
+        const ax = Math.abs(n.x), ay = Math.abs(n.y), az = Math.abs(n.z);
+        if (ax >= ay && ax >= az) normal.x = n.x < 0 ? -1 : 1;
+        else if (ay >= az) normal.y = n.y < 0 ? -1 : 1;
+        else normal.z = n.z < 0 ? -1 : 1;
+        return { ...cell, type, point: hit.point.clone(), normal, distance: hit.distance };
+      }
+      return null;
+    }
+  }
+
+  VoxelWorld.TYPES = TYPES;
+  VoxelWorld.isSolid = solid;
+  global.VoxelWorld = VoxelWorld;
+})(window);
+
+(function (global) {
+  'use strict';
+
+  global.MobSystem = function MobSystem(api) {
+    const { T, GameAssets, V, world, group, player, enemies, dragon, flags, projectiles } = api;
+    const hazards = [];
+    const playing = () => api.state() === 'playing' && player.hp > 0;
+    const emit = (type, data) => { if (api.logs) api.logs(type, data); };
+    const say = text => { if (api.toast) api.toast(text); };
+    const effect = (p, color, count) => { if (api.particles) api.particles(p, color, count); };
+    const tone = name => {
+      if (!api.sound) return;
+      const tones = { bow: [560, .09, 'triangle'], explosion: [70, .28, 'sawtooth'],
+        teleport: [880, .10, 'sine'], fuse: [170, .15, 'sawtooth'], dragon_attack: [95, .20, 'sawtooth'] };
+      api.sound(...(tones[name] || [350, .08, 'square']));
+    };
+    const dist = e => Math.hypot(player.pos.x - e.pos.x, player.pos.z - e.pos.z);
+    const anim = (entity, name, loop = true) => entity.rig.play(name, { loop, reset: false });
+    const protectedPose = entity => Boolean(entity.rig.currentAction && entity.rig.currentAction.loop === T.LoopOnce && !entity.rig.finished);
+    const isPose = (entity, alias) => {
+      const clip = entity.rig.resolveClip(alias);
+      return Boolean(clip && entity.rig.currentClip === clip.name && !entity.rig.finished);
+    };
+
+    function face(e) {
+      const dx = player.pos.x - e.pos.x, dz = player.pos.z - e.pos.z;
+      if (Math.abs(dx) + Math.abs(dz) > .0001) e.rig.root.rotation.y = Math.atan2(dx, dz);
+    }
+
+    function clearAttackLine(origin, target) {
+      const offset = target.clone().sub(origin), distance = offset.length();
+      if (distance < .05) return true;
+      const limit = Math.max(.001, distance - .05);
+      const ray = new T.Raycaster(origin, offset.multiplyScalar(1 / distance), 0, limit);
+      return !world.pick(ray, limit);
+    }
+
+    function move(e, speed, dt, away = false) {
+      const dx = player.pos.x - e.pos.x, dz = player.pos.z - e.pos.z, length = Math.hypot(dx, dz);
+      if (length < .01 || protectedPose(e)) return false;
+      const sign = away ? -1 : 1, mx = dx / length * speed * dt * sign, mz = dz / length * speed * dt * sign;
+      const half = e.id === 'enderman' ? .25 : .30, height = e.id === 'enderman' ? 2.7 : 1.85;
+      for (const [sx, sz] of [[mx, mz], [mx, 0], [0, mz]]) {
+        if (Math.abs(sx) + Math.abs(sz) < 1e-8) continue;
+        const x = e.pos.x + sx, z = e.pos.z + sz, y = world.height(x, z);
+        if (y === -8 || y - e.pos.y > .65 || e.pos.y - y > .9) continue;
+        if (world.collideBox(V(x - half, y + .02, z - half), V(x + half, y + height, z + half))) continue;
+        e.pos.set(x, y, z);
+        return true;
+      }
+      return false;
+    }
+
+    function die(e, reason) {
+      if (e.dead) return;
+      e.hp = 0; e.dead = true; e.deathT = 0; e.pendingAttack = null;
+      anim(e, 'Death', false);
+      emit('enemy_death', { id: e.id, reason });
+    }
+
+    function spawnAll() {
+      for (const e of enemies) if (e.rig && e.rig.dispose) e.rig.dispose();
+      enemies.length = 0;
+      for (const h of hazards) disposeHazard(h);
+      hazards.length = 0;
+      const specs = [
+        ['skeleton', 0, 0, -4, 64], ['zombie', 2, 3, -12, 108],
+        ['creeper', -3, 3, -16, 44], ['enderman', -2, 3, -22, 78],
+        ['piglin', 4, 3, -25, 78]
+      ];
+      for (const [id, x, y, z, hp] of specs) {
+        const rig = GameAssets.make(id), pos = V(x, y, z);
+        const e = { id, rig, pos, hp, maxHp: hp, dead: false, deathT: 0, cd: 1.0,
+          aggro: !['enderman', 'piglin'].includes(id), gaze: 0, tele: 4, fuse: 0, seen: false,
+          pendingAttack: null, teleSide: 1, teleportPending: 0 };
+        rig.root.position.copy(pos); rig.root.userData.entity = e; group.add(rig.root);
+        rig.play('Idle', { reset: false }); enemies.push(e);
+      }
+      emit('enemies_spawned', { ids: specs.map(s => s[0]), count: enemies.length });
+    }
+
+    function fireArrow(e) {
+      const pos = e.pos.clone().add(V(0, 1.35, 0));
+      const aim = player.pos.clone().add(V(0, 1.15, 0));
+      if (!clearAttackLine(pos, aim)) return;
+      const direction = aim.sub(pos).normalize();
+      const mesh = GameAssets.static('arrow');
+      mesh.position.copy(pos); mesh.lookAt(pos.clone().add(direction)); group.add(mesh);
+      projectiles.push({ mesh, pos, v: direction.multiplyScalar(11), life: 3, owner: 'enemy', damage: 10 });
+      tone('bow'); emit('skeleton_arrow', { id: e.id, damage: 10 });
+    }
+
+    function melee(e, dt, range, damage, cooldown) {
+      if (e.pendingAttack) {
+        if (isPose(e, 'Hit')) { e.pendingAttack = null; return; }
+        e.pendingAttack.delay -= dt;
+        if (e.pendingAttack.delay <= 0) {
+          e.pendingAttack = null;
+          if (dist(e) < range && Math.abs(e.pos.y - player.pos.y) < 2.1 &&
+              clearAttackLine(e.pos.clone().add(V(0, 1.25, 0)), player.pos.clone().add(V(0, 1.0, 0)))) {
+            api.hurt(damage, e.id);
+            if (!playing()) return;
+            emit('enemy_melee', { id: e.id, damage });
+          }
+        }
+        return;
+      }
+      if (e.cd <= 0 && dist(e) < range && !protectedPose(e)) {
+        e.cd = cooldown; e.pendingAttack = { delay: .34 };
+        anim(e, 'Attack', false);
+      }
+    }
+
+    function explode(e) {
+      const center = e.pos.clone().add(V(0, .65, 0));
+      effect(center, 0xa9ee67, 35); tone('explosion');
+      if (center.distanceTo(player.pos.clone().add(V(0, .7, 0))) <= 3.2) api.hurt(55, 'creeper');
+      if (!playing()) return;
+      let removed = 0;
+      const bx = Math.floor(center.x), by = Math.floor(center.y), bz = Math.floor(center.z);
+      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 0; dy++) for (let dz = -1; dz <= 1; dz++) {
+        const x = bx + dx, y = by + dy, z = bz + dz;
+        if (V(x + .5, y + .5, z + .5).distanceTo(center) > 1.45) continue;
+        const type = world.get(x, y, z);
+        if (type && type !== 'water' && world.remove(x, y, z)) removed++;
+      }
+      world.rebuild(); die(e, 'explosion');
+      flags.creeperExploded = true;
+      emit('creeper_explosion', { damage: 55, radius: 3.2, terrainRadius: 1.45, removedBlocks: removed });
+    }
+
+    function teleport(e) {
+      for (const side of [e.teleSide, -e.teleSide]) {
+        const x = player.pos.x + side * 2.4, z = player.pos.z + 1.5, y = world.height(x, z);
+        if (y === -8 || Math.abs(y - player.pos.y) > 1.2) continue;
+        if (world.collideBox(V(x - .3, y + .02, z - .3), V(x + .3, y + 2.7, z + .3))) continue;
+        effect(e.pos.clone().add(V(0, 1.1, 0)), 0xb367f1, 16);
+        e.pos.set(x, y, z); e.teleSide = -side;
+        effect(e.pos.clone().add(V(0, 1.1, 0)), 0xb367f1, 16);
+        emit('enderman_teleport', { x, y, z }); tone('teleport'); return;
+      }
+    }
+
+    function update(dt) {
+      if (!playing() || !Number.isFinite(dt) || dt <= 0) return;
+      const target = api.enemyTarget ? api.enemyTarget() : null;
+      for (const e of enemies) {
+        if (!playing()) break;
+        e.rig.update(dt);
+        if (e.hp <= 0 && !e.dead) die(e, 'damage');
+        if (e.dead) {
+          e.deathT += dt; anim(e, 'Death', false);
+          if (e.deathT > 4) e.rig.root.visible = false;
+          continue;
+        }
+        e.cd = Math.max(0, e.cd - dt);
+        const d = dist(e);
+        if (!e.seen && d < 13) {
+          e.seen = true; emit('enemy_seen', { id: e.id });
+          if (e.id === 'piglin') say('피글린은 먼저 공격하지 않으면 중립입니다.');
+          if (e.id === 'enderman') say('엔더맨을 오래 조준하면 적대합니다.');
+        }
+        face(e);
+        let walking = false;
+
+        if (e.id === 'enderman' && !e.aggro) {
+          e.gaze = target && target.entity === e && d < 13 ? e.gaze + dt : Math.max(0, e.gaze - dt * 2);
+          if (e.gaze >= 1) {
+            e.aggro = true; e.tele = 4; flags.endermanAngered = true;
+            anim(e, 'Aggro', false); say('엔더맨이 시선에 반응했습니다!'); emit('enderman_gaze_aggro', { seconds: e.gaze });
+          }
+        }
+
+        if (e.id === 'skeleton' && player.pos.z < 6 && d < 14) {
+          if (e.pendingAttack) {
+            if (isPose(e, 'Hit')) e.pendingAttack = null;
+            else {
+              e.pendingAttack.delay -= dt;
+              if (e.pendingAttack.delay <= 0) { e.pendingAttack = null; fireArrow(e); }
+            }
+          } else if (!protectedPose(e)) {
+            if (d > 9) walking = move(e, .8, dt);
+            else if (d < 3.5) walking = move(e, .8, dt, true);
+            if (e.cd <= 0 && d < 14) {
+              e.cd = 2.35; e.pendingAttack = { delay: .60 }; anim(e, 'Bow', false);
+            }
+          }
+        } else if (e.id === 'creeper' && d < 7) {
+          if (d < 2.5 || (e.fuse > 0 && d < 3.8)) {
+            if (!isPose(e, 'Hit')) {
+              if (e.fuse === 0) { anim(e, 'Attack', false); emit('creeper_fuse', { seconds: 1.5 }); tone('fuse'); }
+              e.fuse += dt;
+              if (e.fuse >= 1.5) explode(e);
+            }
+          } else if (e.fuse > 0) e.fuse = Math.max(0, e.fuse - dt * 2);
+          else if (!protectedPose(e)) walking = move(e, 1.4, dt);
+        } else if (e.id === 'enderman' && e.aggro && d < 17) {
+          if (e.teleportPending > 0) {
+            e.teleportPending -= dt;
+            if (e.teleportPending <= 0 && !isPose(e, 'Hit')) teleport(e);
+          } else {
+            e.tele -= dt;
+            if (e.tele <= 0 && !protectedPose(e)) {
+              e.tele = 4; e.teleportPending = .25; anim(e, 'Teleport', false);
+            }
+          }
+          melee(e, dt, 2.0, 13, 1.5);
+          if (d > 1.65 && !protectedPose(e)) walking = move(e, 2.0, dt);
+        } else if (e.id === 'piglin' && e.aggro && d < 15) {
+          flags.piglinProvoked = true; melee(e, dt, 1.9, 12, 1.45);
+          if (d > 1.55 && !protectedPose(e)) walking = move(e, 1.65, dt);
+        } else if (e.id === 'zombie' && d < 13) {
+          melee(e, dt, 1.85, 11, 1.6);
+          if (d > 1.5 && !protectedPose(e)) walking = move(e, 1.1, dt);
+        }
+        if (!playing()) return;
+        if (!e.dead && !protectedPose(e)) anim(e, walking ? 'Walk' : 'Idle');
+        e.rig.root.position.copy(e.pos);
+      }
+    }
+
+    function disposeHazard(h) {
+      group.remove(h.mesh); h.mesh.geometry.dispose(); h.mesh.material.dispose();
+    }
+
+    function updateHazards(dt) {
+      if (!playing()) return;
+      for (let i = hazards.length - 1; i >= 0; i--) {
+        if (!playing()) return;
+        const h = hazards[i]; h.left -= dt;
+        h.mesh.material.opacity = .27 + Math.abs(Math.sin(h.left * 14)) * .25;
+        if (h.left > 0) continue;
+        const distance = Math.hypot(player.pos.x - h.pos.x, player.pos.z - h.pos.z);
+        if (distance < 2.15 && Math.abs(player.pos.y - h.pos.y) < 1.6 && playing()) api.hurt(h.damage, 'dragon');
+        if (!playing()) return;
+        effect(h.pos.clone().add(V(0, .4, 0)), 0xaa68ef, 28); tone('dragon_attack');
+        emit('dragon_hazard_resolve', { phase: h.phase, damage: h.damage, distance, radius: 2.15 });
+        disposeHazard(h); hazards.splice(i, 1);
+      }
+    }
+
+    function hazard(phase) {
+      const pos = player.pos.clone(), top = world.height(pos.x, pos.z);
+      pos.y = top === -8 ? player.pos.y : top;
+      const mesh = new T.Mesh(new T.RingGeometry(.12, 2.15, 48), new T.MeshBasicMaterial({ color: phase === 'fly' ? 0xba73fb : 0xff8460, transparent: true, opacity: .42, side: T.DoubleSide, depthWrite: false }));
+      mesh.rotation.x = -Math.PI / 2; mesh.position.copy(pos).add(V(0, .035, 0)); group.add(mesh);
+      hazards.push({ mesh, pos, left: 1.1, damage: phase === 'fly' ? 18 : 22, phase });
+      emit('dragon_hazard_telegraph', { phase, seconds: 1.1, radius: 2.15, x: pos.x, z: pos.z });
+    }
+
+    function dragonUpdate(dt) {
+      if (!playing() || !dragon.rig || !dragon.active || !Number.isFinite(dt) || dt <= 0) return;
+      dragon.rig.update(dt);
+      if (dragon.hp <= 0 || dragon.phase === 'dying') {
+        // A defeated boss cannot resolve queued attack hazards during its death clip.
+        for (const h of hazards) disposeHazard(h);
+        hazards.length = 0;
+        dragon.phase = 'dying'; dragon.deathT = (dragon.deathT || 0) + dt;
+        anim(dragon, 'Death', false);
+        const deathClip = dragon.rig.resolveClip('Death');
+        if (dragon.deathT >= Math.max(2.5, deathClip ? deathClip.duration : 2.5) && playing()) api.finish(true, '용을 처치했습니다.');
+        return;
+      }
+      updateHazards(dt);
+      if (!playing()) return;
+      dragon.cycle = (dragon.cycle || 0) + dt;
+      const cycle = dragon.cycle % 22, phase = cycle < 12 ? 'fly' : 'land';
+      if (dragon.phase !== phase) {
+        dragon.phase = phase; emit('dragon_phase', { phase });
+        say(phase === 'fly' ? '용이 비행합니다. 활과 화살로 대응하세요.' : '용이 내려왔습니다. 위험 표시를 피해 근접 공격하세요.');
+      }
+      const target = phase === 'fly' ? V(Math.sin(dragon.cycle * .52) * 3, 8, -38 + Math.cos(dragon.cycle * .52) * 3) : V(0, 3, -36);
+      dragon.pos.lerp(target, 1 - Math.exp(-dt * 2.2)); dragon.rig.root.position.copy(dragon.pos); face(dragon);
+      dragon.attackT = (dragon.attackT || 0) - dt;
+      if (dragon.attackT <= 0 && !protectedPose(dragon)) {
+        dragon.attackT = phase === 'fly' ? 3.8 : 3.1; hazard(phase); anim(dragon, 'Attack', false);
+      } else if (!protectedPose(dragon)) anim(dragon, phase === 'fly' ? 'Fly' : 'Idle');
+    }
+
+    return { spawnAll, update, dragonUpdate };
+  };
+})(window);
+
+
+/* Jo Hyeonseong: read-only HUD bindings for the current game state. */
+(function (global) {
+  'use strict';
+
+  global.GameUI = function GameUI(api) {
+    const $ = id => document.getElementById(id);
+    const slots = [];
+    const recipeButtons = [];
+    const fallbackNames = {
+      pickaxe: '곡괭이', axe: '도끼', sword: '칼', bow: '활', arrow: '화살',
+      arrows: '화살', food: '음식', stone: '돌', wood: '나무', eye: '엔더의 눈',
+      armor: '갑옷', ore: '광석', iron: '철'
+    };
+    const escape = value => String(value == null ? '' : value).replace(/[&<>"']/g,
+      char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    const number = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
+    const clamp = value => Math.max(0, Math.min(1, number(value)));
+    const read = (key, fallback) => typeof api[key] === 'function' ? api[key]() : fallback;
+    const name = id => (api.names && api.names[id]) || fallbackNames[id] || String(id);
+    const text = (id, value) => {
+      const node = $(id);
+      if (node && node.textContent !== String(value)) node.textContent = value;
+    };
+    const html = (id, value) => {
+      const node = $(id);
+      if (node && node.innerHTML !== value) node.innerHTML = value;
+    };
+    let initialized = false;
+    let lastWeapon = null;
+
+    function costText(recipe) {
+      const cost = recipe.cost || recipe.costs || {};
+      return Object.entries(cost).filter(([, amount]) => number(amount) > 0)
+        .map(([id, amount]) => `${name(id)} ${amount}`).join(' · ') || recipe.description || '';
+    }
+
+    function init() {
+      if (initialized) return;
+      initialized = true;
+      const hotbar = $('hotbar');
+      if (hotbar) {
+        hotbar.replaceChildren();
+        (api.slotIds || []).slice(0, 9).forEach((id, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.dataset.item = id;
+          button.title = `${index + 1} · ${name(id)}`;
+          button.setAttribute('aria-label', button.title);
+          const symbol = Array.isArray(api.symbols) ? api.symbols[index] : (api.symbols || {})[id];
+          button.innerHTML = `<span class="slotnum">${index + 1}</span><span class="symbol">${escape(symbol || '◇')}</span><span class="slotlabel">${escape(name(id))}</span><span class="slotcount"></span>`;
+          button.addEventListener('click', () => api.choose(id));
+          hotbar.appendChild(button);
+          slots.push({ id, button, count: button.querySelector('.slotcount') });
+        });
+      }
+      const recipes = $('recipes');
+      if (recipes) {
+        recipes.replaceChildren();
+        (api.recipes || []).forEach(recipe => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'recipe';
+          const label = recipe.name || recipe.label || name(recipe.id);
+          button.innerHTML = `<b>${escape(label)}</b><span>${escape(costText(recipe))}${recipe.description ? '<br>' + escape(recipe.description) : ''}</span>`;
+          button.addEventListener('click', () => {
+            if (api.canCraft(recipe)) api.craft(recipe);
+            update();
+          });
+          recipes.appendChild(button);
+          recipeButtons.push({ recipe, button, label });
+        });
+      }
+      update();
+    }
+
+    function update() {
+      const inv = read('inv', {}) || {};
+      const player = read('player', {}) || {};
+      const dragon = read('dragon', null);
+      const flags = read('flags', {}) || {};
+      const stats = read('stats', {}) || {};
+      const mastery = read('mastery', {}) || {};
+      const current = read('selected', null);
+      const selected = typeof current === 'number' ? (api.slotIds || [])[current] : current;
+      const rawState = read('state', 'ready');
+      const state = typeof rawState === 'string' ? rawState : rawState && (rawState.phase || rawState.status);
+      const hp = Math.max(0, number(player.hp, number(player.health, 100)));
+      const maxHp = Math.max(1, number(player.maxHp, number(player.maxHealth, 100)));
+      const heartCount = hp > 0 ? Math.ceil(clamp(hp / maxHp) * 10) : 0;
+      const hearts = $('hearts');
+      text('hearts', '♥'.repeat(heartCount) + '♡'.repeat(10 - heartCount));
+      if (hearts) hearts.setAttribute('aria-label', `체력 ${Math.ceil(hp)} / ${maxHp}`);
+      text('armorText', inv.armorEquipped ? '◆ 갑옷 착용 · 피해 45% 감소' : inv.armorOwned ? '◇ 갑옷 벗음' : '◇ 갑옷 없음');
+      const inventoryText = `나무 ${number(inv.wood)} · 돌 ${number(inv.stone)} · 철 ${number(inv.iron)} · 흙 ${number(inv.dirt)} · 화살 ${number(inv.arrows)} · 음식 ${number(inv.food)}`;
+      html('resources', `나무 <b>${number(inv.wood)}</b> · 돌 <b>${number(inv.stone)}</b> · 철 <b>${number(inv.iron)}</b><br>흙 <b>${number(inv.dirt)}</b> · 화살 <b>${number(inv.arrows)}</b> · 음식 <b>${number(inv.food)}</b>`);
+      text('craftInv', inventoryText);
+
+      slots.forEach(({ id, button, count }) => {
+        const available = typeof api.available === 'function' ? api.available(id) : inv[id];
+        button.classList.toggle('active', selected === id);
+        button.classList.toggle('unavailable', !available);
+        button.setAttribute('aria-pressed', String(selected === id));
+        const quantity = id === 'bow' ? number(inv.arrows) : id === 'block' ? number(inv.stone) + number(inv.dirt) : inv[id];
+        count.textContent = id === 'armor' ? (inv.armorEquipped ? '착용' : inv.armorOwned ? '보유' : '') : typeof quantity === 'number' ? String(quantity) : quantity === true ? '✓' : '';
+      });
+
+      const isWeapon = id => id && Object.prototype.hasOwnProperty.call(api.baseDamage || {}, id);
+      if (isWeapon(selected)) lastWeapon = selected;
+      if (lastWeapon) {
+        const record = mastery[lastWeapon];
+        const hits = number(typeof record === 'object' && record ? record.hits ?? record.uses : record);
+        const damage = typeof api.damageFor === 'function' ? api.damageFor(lastWeapon) : (api.baseDamage || {})[lastWeapon];
+        const prefix = isWeapon(selected) ? '' : '직전 무기 · ';
+        text('growth', `${prefix}${name(lastWeapon)} 전투 적중 ${hits} · 피해 ${number(damage)} · 3회마다 +4`);
+      } else text('growth', '무기를 사용할수록 실제 피해가 증가합니다');
+
+      let objective = '나무와 철을 모아, 출발 준비';
+      let hint = '왼쪽 나무 4개 · 오른쪽 바닥 철광석 4개 · 돌 10개. 곡괭이·도끼로 캐고 캠프에서 E로 제작하세요.';
+      const prepared = Boolean(inv.sword && inv.bow && inv.armorOwned);
+      const bridged = Boolean(flags.crossed);
+      const climbed = Boolean(flags.climbed);
+      const eyeUsed = Boolean(flags.eyeUsed);
+      const fighting = Boolean(dragon && dragon.active);
+      if (prepared) {
+        objective = '강에 길을 잇고 높은 턱 오르기';
+        hint = '5번 돌 선택 → 강가에서 아래를 보고 우클릭/F. Shift를 누르면 가장자리에서 멈춥니다.';
+      }
+      if (bridged && !climbed) {
+        objective = '직접 만든 발판으로 높은 턱 오르기';
+        hint = '돌이나 나무를 쌓아 발판을 만드세요. Space로 뛰어 올라갈 수 있습니다.';
+      }
+      if (bridged && climbed) {
+        objective = '적의 움직임을 읽고 전진하기';
+        hint = '적마다 다른 위험을 살피고 전진하세요. 제단 가까이에서 E로 엔더의 눈을 얻습니다.';
+      }
+      if (inv.eye && !eyeUsed && bridged && climbed) {
+        objective = '엔더의 눈으로 용의 길 찾기';
+        hint = '8번 엔더의 눈을 선택하고 좌클릭하세요. 용의 둥지를 막은 봉인이 풀립니다.';
+      }
+      if (fighting) {
+        objective = '엔더 드래곤 처치';
+        hint = '비행할 때 활로 조준하고, 접근할 때 칼로 공격하세요. 공격 예고를 피하세요.';
+      }
+      if (state === 'dead' || state === 'lost') { objective = '이번 생존은 여기까지'; hint = '사망하여 이번 판이 종료되었습니다.'; }
+      if (state === 'won' || state === 'win') { objective = '엔더 드래곤 처치 성공'; hint = '직접 만든 길과 준비한 장비로 용을 쓰러뜨렸습니다.'; }
+      text('objective', objective);
+      text('hint', hint);
+      const boss = $('boss');
+      if (boss) boss.style.display = fighting ? 'block' : 'none';
+      const bossfill = $('bossfill');
+      if (bossfill && dragon) bossfill.style.width = `${clamp(number(dragon.hp) / Math.max(1, number(dragon.maxHp, 100))) * 100}%`;
+
+      const mineValue = read('mineProgress', 0);
+      const charge = number(read('bowCharge', 0));
+      const progress = typeof mineValue === 'object' && mineValue ? number(mineValue.progress) : number(mineValue);
+      const activeProgress = selected === 'bow' && charge > 0 ? clamp(charge) : clamp(progress);
+      if ($('mine')) $('mine').style.display = activeProgress > 0 ? 'block' : 'none';
+      if ($('minefill')) $('minefill').style.width = `${activeProgress * 100}%`;
+      if ($('craft')) $('craft').style.display = read('craftOpen', false) ? 'flex' : 'none';
+      recipeButtons.forEach(({ recipe, button, label }) => {
+        button.disabled = !api.canCraft(recipe);
+        button.setAttribute('aria-label', `${label} · ${costText(recipe)}${button.disabled ? ' · 현재 제작 불가' : ''}`);
+      });
+      const elapsed = Math.max(0, Math.floor(number(read('time', 0))));
+      const clock = `${Math.floor(elapsed / 60)}:${String(elapsed % 60).padStart(2, '0')}`;
+      text('miniStatus', `여정 ${clock} · 채굴 ${number(stats.mined)} · 설치 ${number(stats.placed)} · 처치 ${number(stats.kills)}`);
+    }
+
+    function showModal(title, body, button, callback) {
+      const card = $('card');
+      if (!card) return;
+      card.innerHTML = `<div class="eyebrow">조현성 · 블록 너머의 용</div><h2>${escape(title)}</h2><div class="lead">${body == null ? '' : String(body)}</div><button class="primary" id="continue" type="button">${escape(button || '계속하기')}</button>`;
+      const modal = $('modal');
+      if (modal) modal.style.display = 'flex';
+      const next = $('continue');
+      if (next) next.onclick = () => { if (typeof callback === 'function') callback(); };
+    }
+
+    return { init, update, showModal };
+  };
+})(window);
+
+
+/* First-person voxel survival, editable source. No network or runtime imports. */
+(async function(){
+'use strict';
+const {THREE:T}=Game3D,$=id=>document.getElementById(id),canvas=$('view'),V=(x=0,y=0,z=0)=>new T.Vector3(x,y,z),clamp=T.MathUtils.clamp;
+const names={pickaxe:'곡괭이',axe:'도끼',sword:'검',bow:'활',block:'돌 / 흙',wood:'나무',food:'음식',eye:'엔더의 눈',armor:'갑옷',hand:'빈손',grass:'잔디',dirt:'흙',stone:'돌',ore:'철광석',log:'통나무',planks:'나무판',leaves:'나뭇잎',zombie:'좀비',skeleton:'스켈레톤',creeper:'크리퍼',enderman:'엔더맨',piglin:'피글린',dragon:'협곡의 용'};
+const slotIds=['pickaxe','axe','sword','bow','block','wood','food','eye','armor'],symbols=['⛏','🪓','⚔','🏹','▧','▤','◆','◉','♜'],baseDamage={pickaxe:8,axe:10,sword:16,bow:22};
+const recipes=[{id:'sword',name:'철검',cost:{wood:1,iron:2},description:'빠른 근접 공격 · 피해 16부터'},{id:'armor',name:'철 갑옷 한 벌',cost:{wood:1,iron:2},description:'받는 피해 45% 감소 · 9번 착탈'},{id:'bow',name:'활 + 화살 24개',cost:{wood:2,stone:2},description:'공중의 용을 공격하는 원거리 무기'},{id:'arrows',name:'화살 16개',cost:{wood:1,stone:1},description:'사용한 화살 보충'},{id:'food',name:'식량 2개',cost:{wood:1},description:'장작을 주고 받은 음식 · 체력 34 회복'}];
+let scene,camera,renderer,world,group,hero,viewRoot,viewItem,viewRig,dragon,gate,eyeObject,ghost,selection,mobs,ui;
+let state='loading',craftOpen=false,third=false,started=false,audioCtx=null,runId=0;
+let player={pos:V(0,0,10),vy:0,grounded:false,yaw:0,pitch:0,hp:100},inv={},mastery={},stats={},flags={},enemies=[],projectiles=[],effects=[],events=[];
+let selected='pickaxe',keys=new Set(),left=false,drag=false,lastMouse=null,mineKey='',mineProgress=0,bowCharge=0,attackCD=0,placeCD=0,hurtTime=0,toastTime=0,time=0,clockLast=0,frames=0,fps=60,waterCD=0,target=null,placement=null,enemyTarget=null,swing=0;
+let lawState={fines:0,heat:0,stars:0,maxStars:0,total:0,counts:{},recent:[],warned:{},quiet:0,version:0,hudVersion:0,arrested:false};
+const raycaster=new T.Raycaster();
+function logs(type,data={}){events.push({t:+time.toFixed(3),type,...data});if(events.length>3000)events.shift();}
+/* 대한민국 법률 시스템: 이 세계의 행동은 실제 법령 위반으로 기록된다(게임적 각색). */
+const LAW_ARREST_HEAT=150,LAW_DECAY=1.2,LAW_QUIET=4;
+const LAW_DB=Object.freeze({
+ logging:{law:'산림자원의 조성 및 관리에 관한 법률',short:'무허가 벌채',offense:'허가 없이 입목(나무) 벌채',fine:30,heat:2},
+ mining:{law:'광업법',short:'무허가 채굴',offense:'광업권 없이 광물 채굴',fine:60,heat:2},
+ digging:{law:'국토의 계획 및 이용에 관한 법률',short:'무허가 굴착',offense:'개발행위 허가 없이 토지 굴착',fine:20,heat:1},
+ building:{law:'건축법',short:'무단 건축',offense:'건축신고 없이 구조물 설치',fine:40,heat:2},
+ river:{law:'하천법',short:'하천 무단 점용',offense:'점용 허가 없이 하천에 다리 설치',fine:70,heat:3},
+ sword:{law:'총포·도검·화약류 등의 안전관리에 관한 법률',short:'도검 무허가 소지',offense:'허가 없이 도검을 제작·소지',fine:80,heat:4},
+ assault:{law:'형법 제260조(폭행)',short:'폭행',offense:'몬스터를 향한 고의적 폭행',fine:10,heat:1},
+ kill:{law:'야생생물 보호 및 관리에 관한 법률',short:'야생동물 살상',offense:'허가 없이 야생동물 포획·살상',fine:90,heat:5},
+ theft:{law:'유실물법',short:'습득물 미신고',offense:'엔더의 눈을 습득하고 신고하지 않음',fine:30,heat:3},
+ vandalism:{law:'형법 제366조(재물손괴)',short:'봉인 손괴',offense:'용의 둥지 봉인 훼손',fine:120,heat:6},
+ trespass:{law:'형법 제319조(주거침입)',short:'주거침입',offense:'용의 둥지에 무단 침입',fine:50,heat:3},
+ dragonHit:{law:'야생생물 보호 및 관리에 관한 법률',short:'멸종위기종 공격',offense:'멸종위기종(용) 공격',fine:15,heat:1},
+ dragonKill:{law:'야생생물 보호 및 관리에 관한 법률',short:'멸종위기종 살상',offense:'멸종위기종(용) 살상',fine:300,heat:10}
+});
+const LAW_WARN={2:'⚠ 수배 2단계 · 순찰대가 당신을 주시합니다.',3:'🚨 수배 3단계 · 경찰이 추적을 시작했습니다.',4:'🚨 수배 4단계 · 곧 체포될 수 있습니다!',5:'🚨 수배 5단계 · 즉시 법 위반을 멈추세요!'};
+function lawStars(heat){return Math.min(5,Math.ceil(heat/30));}
+function violate(key){
+ if(state!=='playing'||!LAW_DB[key])return;
+ const db=LAW_DB[key];
+ lawState.quiet=0;lawState.total++;lawState.fines+=db.fine;
+ lawState.heat=Math.min(LAW_ARREST_HEAT,lawState.heat+db.heat);
+ lawState.counts[key]=(lawState.counts[key]||0)+1;
+ lawState.recent.unshift({key,t:time});if(lawState.recent.length>4)lawState.recent.pop();
+ lawState.version++;
+ logs('lawViolation',{key,law:db.law,offense:db.offense,fine:db.fine,heat:+lawState.heat.toFixed(1),totalFines:lawState.fines,total:lawState.total});
+ toast(`⚖ ${db.law} 위반 · ${db.offense} · 벌금 ${db.fine}만원`);
+ sound(180,.12,'sawtooth',.03);
+ const s=lawStars(lawState.heat);
+ if(s>lawState.stars){
+  lawState.stars=s;lawState.maxStars=Math.max(lawState.maxStars,s);
+  if(s>=2&&!lawState.warned[s]){lawState.warned[s]=true;toast(LAW_WARN[s]);sound(720,.3,'square',.045);}
+  logs('wantedLevel',{stars:s,heat:+lawState.heat.toFixed(1)});
+ }
+ if(lawState.heat>=LAW_ARREST_HEAT&&!lawState.arrested&&!(dragon&&dragon.phase==='dying')){
+  lawState.arrested=true;
+  logs('arrest',{heat:lawState.heat,fines:lawState.fines,violations:lawState.total,counts:{...lawState.counts}});
+  sound(880,.5,'sawtooth',.06);
+  finish(false,'경찰에 체포되었습니다');
+  return;
+ }
+ updateLawHud();
+}
+function lawUpdate(dt){
+ if(lawState.heat<=0){lawState.quiet=0;return;}
+ lawState.quiet+=dt;
+ if(lawState.quiet<LAW_QUIET)return;
+ lawState.heat=Math.max(0,lawState.heat-LAW_DECAY*dt);
+ const s=lawStars(lawState.heat);
+ if(s<lawState.stars)lawState.stars=s;
+}
+function lawSummaryHTML(){
+ if(!lawState.total)return '<div id="lawsysRecord">⚖ 법원 기록: 위반 0건 · 벌금 0만원 — 오늘은 모범 시민입니다.</div>';
+ const top=Object.entries(lawState.counts).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k,n])=>`${LAW_DB[k].short} ${n}건`).join(' · ');
+ return `<div id="lawsysRecord">⚖ 법원 기록: 위반 ${lawState.total}건 · 총 벌금 ${lawState.fines.toLocaleString('ko-KR')}만원 · 최고 수배 ${lawState.maxStars}단계<br>주요 위반: ${top}<br>법 위반 없이 잠시 숨을 고르면 수배 게이지가 낮아집니다. (게임적 각색 · 실제 법 적용과 다를 수 있음)</div>`;
+}
+function updateLawHud(){
+ const s=lawStars(lawState.heat),head=$('lawsysHead');
+ if(head)head.textContent=`⚖ 대한민국 법 적용 · 수배 ${s>0?'★'.repeat(s)+'☆'.repeat(5-s):'청정'}`;
+ const fill=$('lawsysFill');
+ if(fill){fill.style.width=Math.min(100,lawState.heat/LAW_ARREST_HEAT*100).toFixed(1)+'%';fill.style.background=lawState.heat>=LAW_ARREST_HEAT*.75?'#e0432e':'#d96a55';}
+ const fine=$('lawsysFine');
+ if(fine)fine.textContent=`총 벌금 ${lawState.fines.toLocaleString('ko-KR')}만원 · 위반 ${lawState.total}건`;
+ if(lawState.hudVersion===lawState.version)return;
+ lawState.hudVersion=lawState.version;
+ const list=$('lawsysList');
+ if(!list)return;
+ list.replaceChildren();
+ if(!lawState.recent.length){
+  const row=document.createElement('div');row.textContent='아직 위반 기록이 없습니다 · 수배 청정';list.appendChild(row);return;
+ }
+ for(const item of lawState.recent){
+  const db=LAW_DB[item.key],row=document.createElement('div');
+  row.textContent=`· ${db.short} · 벌금 ${db.fine}만원 — ${db.law}`;
+  list.appendChild(row);
+ }
+}
+function resetLaw(){lawState={fines:0,heat:0,stars:0,maxStars:0,total:0,counts:{},recent:[],warned:{},quiet:0,version:1,hudVersion:0,arrested:false};updateLawHud();}
+function toast(s){$('toast').textContent=s;toastTime=3;}
+function sound(hz=350,d=.08,type='square',volume=.025){try{audioCtx??=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=hz;g.gain.setValueAtTime(volume,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+d);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d);}catch{}}
+function cube(w,h,d,color){return new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshStandardMaterial({color,roughness:1}));}
+function available(id){return id==='sword'?inv.sword:id==='bow'?inv.bow:id==='block'?inv.stone+inv.dirt>0:id==='wood'?inv.wood>0:id==='food'?inv.food>0:id==='eye'?inv.eye>0:id==='armor'?inv.armorOwned:true;}
+function damageFor(id){return(baseDamage[id]||0)+Math.min(4,Math.floor((mastery[id]||0)/3))*4;}
+function clearInput(){keys.clear();left=false;drag=false;bowCharge=0;mineProgress=0;mineKey='';}
+function lock(){try{const p=canvas.requestPointerLock?.();p?.catch?.(()=>{});}catch{}}
+function unlock(){try{document.exitPointerLock?.();}catch{}}
+function addLabel(text,x,y,z){const c=document.createElement('canvas');c.width=512;c.height=128;const a=c.getContext('2d');a.fillStyle='#132a26dd';a.fillRect(0,8,512,112);a.strokeStyle='#b6c991';a.strokeRect(1,9,510,110);a.fillStyle='#f6e9c8';a.font='bold 34px Malgun Gothic';a.textAlign='center';a.fillText(text,256,76);const p=new T.Sprite(new T.SpriteMaterial({map:new T.CanvasTexture(c)}));p.scale.set(3.5,.875,1);p.position.set(x,y,z);group.add(p);return p;}
+function action(rig,name){rig.play(name,{reset:false});}
+function armView(){if(viewItem)viewRoot.remove(viewItem);viewRig=null;viewItem=null;const map={block:inv.stone?'stone_block':'dirt_block',wood:'wood_planks',eye:'eye_of_ender',armor:'armor_chest'},id=map[selected]||selected;if(!GameAssets.gltfs[id]||!available(selected))return;if(selected==='bow'){viewRig=GameAssets.make('bow');viewItem=viewRig.root;viewRig.play('Idle');}else viewItem=GameAssets.static(id);viewItem.scale.setScalar(['block','wood','armor'].includes(selected)?.25:selected==='bow'?.6:.55);viewItem.position.set(.1,-.14,0);viewItem.rotation.set(.15,0,-.45);viewRoot.add(viewItem);}
+function choose(id){if(state!=='playing')return;selected=id;mineProgress=0;mineKey='';left=false;bowCharge=0;armView();logs('select',{id});}
+function canCraft(r){return Object.entries(r.cost).every(([k,v])=>inv[k]>=v)&&!(r.id==='armor'?inv.armorOwned:['sword','bow'].includes(r.id)&&inv[r.id]);}
+function craft(r){if(state!=='playing'||!craftOpen||!canCraft(r))return;Object.entries(r.cost).forEach(([k,v])=>inv[k]-=v);if(r.id==='armor'){inv.armorOwned=true;inv.armorEquipped=true;}else if(r.id==='arrows')inv.arrows+=16;else if(r.id==='food')inv.food+=2;else{inv[r.id]=true;if(r.id==='bow')inv.arrows+=24;}stats.crafted++;if(r.id==='sword')violate('sword');logs('craft',{id:r.id,cost:r.cost,inventory:{...inv}});sound(660);toast(r.name+' 준비 완료');ui.update();}
+$('closeCraft').onclick=()=>toggleCraft();
+function toggleCraft(){if(state!=='playing')return;if(!craftOpen&&player.pos.distanceTo(V(0,0,10))>5){if(!flags.eyePicked&&player.pos.distanceTo(V(0,3,-26))<3){inv.eye=1;flags.eyePicked=true;eyeObject.visible=false;violate('theft');logs('eyePickup');toast('엔더의 눈 획득 · 8번을 선택하고 사용하세요');return;}toast('제작은 시작 캠프에서 가능합니다');return;}craftOpen=!craftOpen;$('craft').style.display=craftOpen?'flex':'none';clearInput();if(craftOpen)unlock();else lock();ui.update();}
+function resetRun(){
+ runId++;if(world)scene.remove(world.root);if(group)scene.remove(group);group=new T.Group();scene.add(group);world=new VoxelWorld(scene).build();enemies=[];projectiles=[];effects=[];
+ player={pos:V(0,0,10),vy:0,grounded:false,yaw:0,pitch:0,hp:100};inv={wood:0,stone:0,dirt:0,iron:0,food:1,arrows:0,sword:false,bow:false,armorOwned:false,armorEquipped:false,eye:0};mastery={pickaxe:0,axe:0,sword:0,bow:0};stats={mined:0,placed:0,bridgePlaced:0,stairsPlaced:0,crafted:0,kills:0,shots:0,damageTaken:0,effectiveHits:0};flags={crossed:false,climbed:false,eyePicked:false,eyeUsed:false,nestEntered:false};events=[];time=0;selected='pickaxe';attackCD=placeCD=waterCD=0;clearInput();third=false;craftOpen=false;$('craft').style.display='none';
+ hero=GameAssets.make('hero');group.add(hero.root);hero.play('Idle');hero.root.visible=false;
+ dragon={rig:GameAssets.make('dragon'),pos:V(0,8,-38),hp:320,maxHp:320,active:false,phase:'waiting',cycle:0,attackT:3,deathT:0};dragon.rig.root.scale.setScalar(.6);dragon.rig.root.position.copy(dragon.pos);group.add(dragon.rig.root);dragon.rig.play('Fly');
+ mobs=MobSystem({T,GameAssets,V,world,group,player,enemies,dragon,flags,state:()=>state,time:()=>time,enemyTarget:()=>enemyTarget,hurt,logs,toast,particles,projectiles,sound,finish});mobs.spawnAll();
+ eyeObject=GameAssets.static('eye_of_ender');eyeObject.position.set(0,4,-26);eyeObject.scale.setScalar(.7);group.add(eyeObject);const pedestal=cube(1,.6,1,0x485248);pedestal.position.set(0,3.3,-26);group.add(pedestal);
+ gate=new T.Group();for(const x of[-9,9]){const p=cube(1,5,1,0x493356);p.position.set(x,5.5,-30);gate.add(p);}const screen=new T.Mesh(new T.PlaneGeometry(18,5),new T.MeshBasicMaterial({color:0xb471ed,transparent:true,opacity:.24,side:T.DoubleSide}));screen.position.set(0,5.5,-30);gate.add(screen);group.add(gate);
+ addLabel('캠프 · E 제작',0,2.5,12.5);addLabel('강 · 돌을 이어 다리 만들기',0,2,2);addLabel('높은 턱 · 발판 2단',0,4.5,-9);addLabel('엔더의 눈 · 가까이서 E',0,6,-26);addLabel('용의 둥지',0,10,-42);
+ const table=cube(1.8,.65,1.1,0x6e492c);table.position.set(2,.325,12);group.add(table);['armor_helmet','armor_chest','armor_leggings','armor_boots'].forEach((id,i)=>{const m=GameAssets.static(id);m.scale.setScalar(.28);m.position.set(1.4+i*.45,.7,12);group.add(m);});
+ ghost=new T.Mesh(new T.BoxGeometry(1.015,1.015,1.015),new T.MeshBasicMaterial({color:0xeed096,wireframe:true,transparent:true,opacity:.8}));group.add(ghost);ghost.visible=false;selection=new T.Mesh(new T.BoxGeometry(1.008,1.008,1.008),new T.MeshBasicMaterial({color:0xf7edc9,wireframe:true}));group.add(selection);selection.visible=false;armView();resetLaw();logs('runStart',{runId});ui.update();
+}
+function begin(){if(state==='loading')return;sound(440);resetRun();state='playing';started=true;$('modal').style.display='none';lock();}
+function pause(){if(state!=='playing'||craftOpen)return;state='paused';clearInput();unlock();ui.showModal('잠깐 쉬어 가기','이 세계와 체력은 그대로 멈춰 있습니다.','계속하기',()=>{state='playing';$('modal').style.display='none';lock();});}
+function finish(won,reason){if(state!=='playing')return;if(won)stats.kills++;state=won?'won':'dead';clearInput();unlock();logs(won?'win':'death',{reason,hp:player.hp,dragonHP:dragon.hp,elapsed:time,stats:{...stats}});$('craft').style.display='none';craftOpen=false;const arrested=lawState.arrested;ui.showModal(won?'길 끝에서, 용을 이겼다':arrested?'⚖ 경찰에 체포되었습니다':'이번 여정은 여기까지',`${won?'용의 체력이 0이 되고 마지막 움직임까지 멈췄습니다.':arrested?'수배 게이지가 가득 차 경찰에 체포되었습니다.':reason+' · 사망하여 이번 판이 종료되었습니다.'}<div id="endStats">${Math.floor(time/60)}분 ${Math.floor(time%60)}초 · 채굴 ${stats.mined}개 · 설치 ${stats.placed}개<br>처치 ${stats.kills}마리 · 검 피해 ${damageFor('sword')} · 활 피해 ${damageFor('bow')}<br>${won?'직접 만든 다리와 발판이 이 승리를 연결했습니다.':'다시 시작하면 지형·재료·무기 숙련도가 처음으로 돌아갑니다.'}</div>${lawSummaryHTML()}`,'새로운 판 시작',begin);sound(won?880:120,.5,'triangle',.05);}
+function hurt(amount,reason){if(state!=='playing'||craftOpen||amount<=0)return;const applied=amount*(inv.armorEquipped?.55:1);player.hp=Math.max(0,player.hp-applied);hurtTime=.5;stats.damageTaken+=applied;logs('damage',{raw:amount,applied,armor:inv.armorEquipped,reason,hp:player.hp});sound(100,.12,'sawtooth');if(player.hp<=0)finish(false,reason);}
+function boundsAt(pos){return{min:V(pos.x-.28,pos.y+.02,pos.z-.28),max:V(pos.x+.28,pos.y+1.72,pos.z+.28)};}
+function collides(pos){const b=boundsAt(pos);return world.collideBox(b.min,b.max);}
+function movePlayer(dt){
+ const turn=1.65*dt;player.yaw+=(keys.has('ArrowLeft')?turn:0)-(keys.has('ArrowRight')?turn:0);player.pitch=clamp(player.pitch+(keys.has('ArrowUp')?turn:0)-(keys.has('ArrowDown')?turn:0),-1.45,1.45);const f=(keys.has('KeyW')?1:0)-(keys.has('KeyS')?1:0),s=(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),sneak=keys.has('ShiftLeft')||keys.has('ShiftRight'),moving=f||s,dir=V(-Math.sin(player.yaw)*f+Math.cos(player.yaw)*s,0,-Math.cos(player.yaw)*f-Math.sin(player.yaw)*s);if(moving)dir.normalize().multiplyScalar((sneak?1.9:4.1)*dt*(player.pos.y<-1?.45:1));
+ for(const axis of['x','z']){const p=player.pos.clone();p[axis]+=dir[axis];if(!collides(p)&&(!sneak||!player.grounded||world.height(p.x,p.z)>=player.pos.y-.55))player.pos[axis]=p[axis];}if(!flags.eyeUsed&&player.pos.z<-29.3)player.pos.z=-29.3;
+ if(keys.has('Space')&&player.grounded){player.vy=6.8;player.grounded=false;sound(190,.05,'triangle');}player.vy-=18*dt;const dy=player.vy*dt,p=player.pos.clone();p.y+=dy;if(collides(p)){if(dy<0){player.grounded=true;player.pos.y=Math.round(player.pos.y);}player.vy=0;}else{player.pos.y=p.y;player.grounded=false;}
+ const floor=world.height(player.pos.x,player.pos.z);if(player.vy<=0&&player.pos.y>=floor-.22&&player.pos.y<=floor+.08){player.pos.y=floor;player.vy=0;player.grounded=true;}
+ if(player.pos.y<-7){player.hp=0;finish(false,'협곡 아래로 추락');return;}waterCD-=dt;if(player.pos.y<-1.2&&player.pos.z>=0&&player.pos.z<5&&waterCD<=0){waterCD=1;hurt(12,'차가운 강물');}
+ if(!flags.crossed&&player.pos.z<0&&player.pos.y>-.5){flags.crossed=true;logs('riverCrossed',{bridgeBlocks:stats.bridgePlaced});toast('강 건너 도착 · 높은 턱에 발판을 만들어 올라가세요');}if(!flags.climbed&&player.pos.z<-9&&player.pos.y>=2.8){flags.climbed=true;logs('plateauClimbed',{stairsBlocks:stats.stairsPlaced});toast('탐험 구역 도착 · 적을 살피며 엔더의 눈을 찾으세요');}if(!flags.nestEntered&&flags.eyeUsed&&player.pos.z<-31){flags.nestEntered=true;violate('trespass');}
+ hero.root.position.copy(player.pos);hero.root.rotation.y=player.yaw+Math.PI;hero.root.visible=third;action(hero,left&&baseDamage[selected]?selected==='pickaxe'?'Mine':selected==='bow'?'Bow':'Attack':moving?'Walk':'Idle');hero.update(dt);
+}
+function updateCamera(){camera.rotation.order='YXZ';camera.rotation.set(player.pitch,player.yaw,0);camera.position.copy(player.pos).add(V(0,1.62,0));if(third)camera.position.addScaledVector(V(0,0,1).applyEuler(camera.rotation),3.4).add(V(0,.7,0));camera.updateMatrixWorld();viewRoot.visible=!third&&state==='playing';viewRoot.position.set(.43,-.43+Math.sin(time*7)*.012,-.72);viewRoot.rotation.z=-Math.sin(swing*9)*.45;}
+function forward(){return V(-Math.sin(player.yaw)*Math.cos(player.pitch),Math.sin(player.pitch),-Math.cos(player.yaw)*Math.cos(player.pitch));}
+function entitySphere(e){return new T.Sphere(e.pos.clone().add(V(0,e.id==='creeper'?.8:e.id==='enderman'?1.5:1,0)),e.id==='enderman'?.8:.7);}
+function nearestEnemy(origin,dir,max){const ray=new T.Ray(origin,dir);let result=null;for(const e of enemies){if(e.dead)continue;const sphere=entitySphere(e),point=sphere.containsPoint(origin)?origin:ray.intersectSphere(sphere,V());if(point){const d=point.distanceTo(origin);if(d<=max&&(!result||d<result.distance))result={entity:e,distance:d};}}if(dragon.active&&dragon.hp>0){const sphere=new T.Sphere(dragon.pos.clone().add(V(0,1.1,dragon.phase==='land'?1.3:0)),dragon.phase==='land'?2.3:2.1),point=sphere.containsPoint(origin)?origin:ray.intersectSphere(sphere,V());if(point){const d=point.distanceTo(origin);if(d<=max&&(!result||d<result.distance))result={entity:dragon,distance:d};}}return result;}
+function updateTarget(){const origin=player.pos.clone().add(V(0,1.62,0)),dir=forward();raycaster.set(origin,dir);target=world.pick(raycaster,5);enemyTarget=nearestEnemy(origin,dir,40);if(enemyTarget){const obstacle=world.pick(raycaster,enemyTarget.distance);if(obstacle&&obstacle.distance<enemyTarget.distance-.05)enemyTarget=null;}selection.visible=!!target&&!(enemyTarget&&enemyTarget.distance<target.distance);if(selection.visible)selection.position.set(target.x+.5,target.y+.5,target.z+.5);placement=null;
+ if(['block','wood'].includes(selected)&&available(selected)){if(target){const p={x:target.x+target.normal.x,y:target.y+target.normal.y,z:target.z+target.normal.z};if(validPlacement(p))placement=p;}
+ // Edge helper extends the same-height block along the cardinal viewing direction.
+ if(player.pitch<-.18&&player.grounded){const dx=-Math.sin(player.yaw),dz=-Math.cos(player.yaw),fx=Math.floor(player.pos.x),fz=Math.floor(player.pos.z),ay=Math.round(player.pos.y)-1,p={x:fx+(Math.abs(dx)>Math.abs(dz)?Math.sign(dx):0),y:ay,z:fz+(Math.abs(dz)>=Math.abs(dx)?Math.sign(dz):0)};if(validPlacement(p)&&!VoxelWorld.isSolid(world.get(p.x,p.y,p.z))&&VoxelWorld.isSolid(world.get(fx,ay,fz)))placement=p;}}
+ ghost.visible=!!placement;if(placement)ghost.position.set(placement.x+.5,placement.y+.5,placement.z+.5);$('target').textContent=enemyTarget?`${names[enemyTarget.entity.id||'dragon']} · ${Math.ceil(enemyTarget.entity.hp)} HP`:target?names[target.type]:!flags.eyePicked&&player.pos.distanceTo(V(0,3,-26))<3?'E · 엔더의 눈 줍기':'';
+}
+function validPlacement(p){if(VoxelWorld.isSolid(world.get(p.x,p.y,p.z)))return false;if(player.pos.distanceTo(V(p.x+.5,p.y+.5,p.z+.5))>5)return false;const b=boundsAt(player.pos);return !(b.min.x<p.x+1&&b.max.x>p.x&&b.min.y<p.y+1&&b.max.y>p.y&&b.min.z<p.z+1&&b.max.z>p.z);}
+function place(){if(state!=='playing'||craftOpen||placeCD>0||!placement||!available(selected))return;const material=selected==='wood'?'wood':inv.stone?'stone':'dirt',type=material==='wood'?'planks':material;if(!validPlacement(placement)||inv[material]<=0)return;const p={...placement};if(world.set(p.x,p.y,p.z,type)){inv[material]--;stats.placed++;violate(p.z>=0&&p.z<=4?'river':'building');if(p.z>=0&&p.z<5&&p.y===-1)stats.bridgePlaced++;if(p.z>=-11&&p.z<=-6&&p.y>=0)stats.stairsPlaced++;logs('place',{...p,blockType:type,remaining:inv[material]});world.rebuild();placeCD=.18;swing=.28;sound(220);armView();}}
+function particles(pos,color,count=8){for(let i=0;i<count;i++){const m=cube(.1,.1,.1,color);m.position.copy(pos);group.add(m);effects.push({mesh:m,v:V((Math.random()-.5)*3,Math.random()*3,(Math.random()-.5)*3),life:.5});}}
+function mine(dt){if(!left||!target||enemyTarget||!['pickaxe','axe','hand','sword'].includes(selected)){mineProgress=0;mineKey='';return;}const key=[target.x,target.y,target.z].join(',');if(key!==mineKey){mineKey=key;mineProgress=0;}const wood=['log','planks','leaves'].includes(target.type),hard=['stone','ore'].includes(target.type),duration=wood?(selected==='axe'?.38:1.25):hard?(selected==='pickaxe'?.48:1.6):.42;mineProgress+=dt/duration;swing=.2;if(mineProgress>=1){const p={x:target.x,y:target.y,z:target.z},type=world.remove(p.x,p.y,p.z);if(type){const gain=['log','planks'].includes(type)?'wood':type==='ore'?'iron':type==='stone'?'stone':['grass','dirt'].includes(type)?'dirt':null;if(gain)inv[gain]++;if(type==='ore')inv.stone++;stats.mined++;violate(['log','planks','leaves'].includes(type)?'logging':['stone','ore'].includes(type)?'mining':'digging');logs('mine',{...p,blockType:type,gain,tool:selected});particles(V(p.x+.5,p.y+.5,p.z+.5),wood?0xb3844e:0xa3aa99);world.rebuild();sound(wood?210:460);armView();}mineProgress=0;mineKey='';}}
+function hitEntity(e,weapon){if(state!=='playing'||e.dead||e.hp<=0)return false;if(e===dragon&&((e.phase==='fly'&&weapon!=='bow')||(e.phase==='land'&&weapon==='bow'))){toast(e.phase==='land'?'용이 접은 날개는 화살을 튕깁니다 · 검으로 공격하세요':'공중의 용은 활로 공격하세요');logs('blockedHit',{target:'dragon',weapon,phase:e.phase});return false;}const amount=damageFor(weapon),before=mastery[weapon]||0;mastery[weapon]=before+1;e.hp=Math.max(0,e.hp-amount);stats.effectiveHits++;violate(e===dragon?'dragonHit':'assault');logs('hit',{target:e.id||'dragon',weapon,damage:amount,hp:e.hp,hits:mastery[weapon],phase:e.phase||null});if(Math.floor(before/3)!==Math.floor(mastery[weapon]/3)&&before<12){toast(`${names[weapon]} 숙련 증가 · 실제 피해 ${amount} → ${damageFor(weapon)}`);logs('mastery',{weapon,damageBefore:amount,damageAfter:damageFor(weapon)});}sound(weapon==='bow'?630:410);particles(e.pos.clone().add(V(0,1,0)),e===dragon?0xb78bc9:0xe3b88b);
+ if(e!==dragon){e.aggro=true;e.rig.play(e.hp<=0?'Death':'Hit',{loop:false});if(e.hp<=0){e.dead=true;e.deathT=0;stats.kills++;violate('kill');inv.food++;inv.arrows+=e.id==='skeleton'?8:0;logs('kill',{id:e.id,dropFood:1});toast(names[e.id]+' 처치 · 음식 +1');}}else if(e.hp<=0){e.phase='dying';e.deathT=0;violate('dragonKill');e.rig.play('Death',{loop:false});logs('dragonDeathStarted');}return true;
+}
+function melee(){if(attackCD>0||!baseDamage[selected]||selected==='bow'||!available(selected))return;attackCD=selected==='axe'?.75:.5;swing=.35;const origin=player.pos.clone().add(V(0,1.62,0)),dir=forward(),limit=enemyTarget?.entity===dragon?4.2:3;raycaster.set(origin,dir);const wall=world.pick(raycaster,limit),hit=nearestEnemy(origin,dir,limit);if(hit&&(!wall||hit.distance<wall.distance+.04))hitEntity(hit.entity,selected);else sound(170,.04,'triangle');}
+function useItem(){if(state!=='playing'||craftOpen)return;if(selected==='food'){if(inv.food&&player.hp<100&&attackCD<=0){const before=player.hp;inv.food--;player.hp=Math.min(100,player.hp+34);attackCD=.7;logs('eat',{healed:player.hp-before,remaining:inv.food});toast('음식으로 체력 회복');sound(520);armView();}return;}if(selected==='armor'){if(inv.armorOwned){inv.armorEquipped=!inv.armorEquipped;logs('armorToggle',{equipped:inv.armorEquipped});toast(inv.armorEquipped?'갑옷 착용 · 받는 피해 45% 감소':'갑옷 해제');}return;}if(selected==='eye'){if(inv.eye>0&&!flags.eyeUsed){inv.eye--;flags.eyeUsed=true;dragon.active=true;dragon.phase='fly';dragon.cycle=0;gate.visible=false;violate('vandalism');logs('eyeUse');toast('봉인이 풀렸습니다 · 공중에는 활, 착지하면 검');sound(740,.35,'sine');armView();}return;}if(selected==='bow'){if(inv.bow&&inv.arrows>0){bowCharge=.001;viewRig?.play('DrawRelease',{loop:false,speed:.8});}else toast('활과 화살을 캠프에서 준비하세요');return;}melee();}
+function shoot(){if(state!=='playing'||craftOpen||selected!=='bow'||bowCharge<.15||!inv.bow||inv.arrows<=0){bowCharge=0;return;}const pos=player.pos.clone().add(V(0,1.55,0)).addScaledVector(forward(),.45),velocity=forward().multiplyScalar(28),mesh=GameAssets.static('arrow');mesh.scale.setScalar(.75);mesh.position.copy(pos);group.add(mesh);projectiles.push({mesh,pos,v:velocity,life:3,owner:'player',weapon:'bow'});inv.arrows--;stats.shots++;logs('shot',{arrows:inv.arrows,charge:Math.min(1,bowCharge)});bowCharge=0;sound(300,.1,'triangle');}
+function updateProjectiles(dt){for(let i=projectiles.length-1;i>=0;i--){const p=projectiles[i],before=p.pos.clone(),step=p.v.clone().multiplyScalar(dt),dist=step.length(),dir=step.clone().normalize();raycaster.set(before,dir);const wall=world.pick(raycaster,dist+.02);let done=!!wall;p.pos.add(step);p.v.y-=1.3*dt;p.life-=dt;if(p.owner==='player'){const h=nearestEnemy(before,dir,dist+.02);if(h&&(!wall||h.distance<wall.distance)){hitEntity(h.entity,p.weapon);done=true;}}else{const point=new T.Ray(before,dir).intersectSphere(new T.Sphere(player.pos.clone().add(V(0,1,0)),.55),V());if(point&&point.distanceTo(before)<=dist+.02&&(!wall||point.distanceTo(before)<wall.distance)){hurt(p.damage,'스켈레톤의 화살');done=true;}}p.mesh.position.copy(p.pos);p.mesh.quaternion.setFromUnitVectors(V(0,1,0),p.v.clone().normalize());if(done||p.life<0){group.remove(p.mesh);projectiles.splice(i,1);}if(state!=='playing')break;}}
+function updateEffects(dt){for(let i=effects.length-1;i>=0;i--){const e=effects[i];e.life-=dt;e.v.y-=9*dt;e.mesh.position.addScaledVector(e.v,dt);if(e.life<=0){group.remove(e.mesh);e.mesh.geometry.dispose();e.mesh.material.dispose();effects.splice(i,1);}}}
+function snapshot(){return JSON.parse(JSON.stringify({ready:started||state==='menu',mode:state,runId,time,position:player.pos,yaw:player.yaw,pitch:player.pitch,hp:player.hp,grounded:player.grounded,inventory:inv,selected,mastery,damage:Object.fromEntries(Object.keys(baseDamage).map(k=>[k,damageFor(k)])),flags,stats,law:{fines:lawState.fines,total:lawState.total,heat:+lawState.heat.toFixed(1),stars:lawState.stars,maxStars:lawState.maxStars,arrested:lawState.arrested,counts:{...lawState.counts}},target:target?{x:target.x,y:target.y,z:target.z,type:target.type}:null,placement,enemies:enemies.map(e=>({id:e.id,position:e.pos,hp:e.hp,aggro:e.aggro,dead:e.dead,fuse:e.fuse})),dragon:dragon?{position:dragon.pos,hp:dragon.hp,phase:dragon.phase,active:dragon.active}:null,events,fps,worldCells:world?.cells.size,craftOpen,third}));}
+window.__gameDebug=Object.freeze({snapshot,worldManifest:()=>JSON.parse(JSON.stringify(world?.metadata)),rules:Object.freeze({damage:(base,hits)=>base+Math.min(4,Math.floor(hits/3))*4,received:(raw,equipped)=>raw*(equipped?.55:1)}),laws:LAW_DB,arrestHeat:LAW_ARREST_HEAT});
+try{
+ renderer=new T.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;scene=new T.Scene();scene.background=new T.Color(0x8aadb9);scene.fog=new T.Fog(0x8aadb9,30,75);camera=new T.PerspectiveCamera(72,innerWidth/innerHeight,.06,110);scene.add(camera);scene.add(new T.HemisphereLight(0xd7ebff,0x6a6849,2.1));const sun=new T.DirectionalLight(0xffe4bc,2.5);sun.position.set(-12,24,15);scene.add(sun);viewRoot=new T.Group();camera.add(viewRoot);const sleeve=cube(.16,.32,.2,0x171c1c);sleeve.position.set(.07,-.18,.2);viewRoot.add(sleeve);const hand=cube(.15,.12,.18,0xeee8d7);hand.position.set(.07,0,.17);viewRoot.add(hand);
+ ui=GameUI({T,V,GameAssets,$,names,slotIds,symbols,recipes,baseDamage,state:()=>state,inv:()=>inv,mastery:()=>mastery,player:()=>player,dragon:()=>dragon,flags:()=>flags,stats:()=>stats,time:()=>time,selected:()=>selected,craftOpen:()=>craftOpen,mineProgress:()=>mineProgress,bowCharge:()=>bowCharge,choose,craft,canCraft,damageFor,available,begin});ui.init();await GameAssets.load((n,total,id)=>{$('loading').textContent=`내장 모델 ${n} / ${total} · ${names[id]||id}`;});resetRun();state='menu';$('begin').disabled=false;$('begin').textContent='여정 시작';$('loading').textContent='모든 자산 준비 완료 · 인터넷 없이 플레이';$('begin').onclick=begin;camera.position.set(8,8,14);camera.lookAt(0,1,-6);
+ addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});addEventListener('keydown',e=>{if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();if(e.repeat&&['KeyE','KeyV','KeyF','Escape'].includes(e.code))return;if(e.code==='Escape'){if(craftOpen)toggleCraft();else if(state==='playing')pause();else if(state==='paused')$('continue').click();return;}if(state!=='playing')return;if(e.code==='KeyE'){toggleCraft();return;}if(craftOpen)return;keys.add(e.code);if(/^Digit[1-9]$/.test(e.code))choose(slotIds[Number(e.code.slice(-1))-1]);if(e.code==='KeyQ')choose('hand');if(e.code==='KeyF')place();if(e.code==='KeyV'){third=!third;logs('avatarView',{third});}});addEventListener('keyup',e=>keys.delete(e.code));addEventListener('blur',()=>{clearInput();if(state==='playing'&&!craftOpen)pause();});
+ canvas.addEventListener('contextmenu',e=>e.preventDefault());canvas.addEventListener('mousedown',e=>{if(state!=='playing'||craftOpen)return;if(e.button===2){place();return;}if(e.button===0){left=true;drag=true;lastMouse={x:e.clientX,y:e.clientY};useItem();}});addEventListener('mouseup',e=>{if(e.button===0){if(left&&selected==='bow')shoot();left=false;drag=false;mineProgress=0;mineKey='';bowCharge=0;}});addEventListener('mousemove',e=>{if(state!=='playing'||craftOpen)return;if(document.pointerLockElement===canvas||drag){const dx=document.pointerLockElement===canvas?e.movementX:lastMouse?e.clientX-lastMouse.x:0,dy=document.pointerLockElement===canvas?e.movementY:lastMouse?e.clientY-lastMouse.y:0;player.yaw-=dx*.002;player.pitch=clamp(player.pitch-dy*.002,-1.45,1.45);lastMouse={x:e.clientX,y:e.clientY};}});
+ function frame(ms){requestAnimationFrame(frame);const dt=Math.min(.04,(ms-clockLast)/1000||.016);clockLast=ms;frames++;fps=fps*.97+(1/dt)*.03;if(state==='playing'&&!craftOpen){time+=dt;lawUpdate(dt);attackCD=Math.max(0,attackCD-dt);placeCD=Math.max(0,placeCD-dt);swing=Math.max(0,swing-dt);movePlayer(dt);if(state==='playing'){updateCamera();updateTarget();mine(dt);if(left&&enemyTarget&&selected!=='bow')melee();if(left&&bowCharge>0)bowCharge+=dt;viewRig?.update(dt);mobs.update(dt);}if(state==='playing')updateProjectiles(dt);if(state==='playing')mobs.dragonUpdate(dt);updateEffects(dt);eyeObject.rotation.y=time;eyeObject.position.y=4+Math.sin(time*2)*.1;}if(state==='playing')updateCamera();hurtTime=Math.max(0,hurtTime-dt);$('hurt').style.opacity=hurtTime*1.5;toastTime-=dt;if(toastTime<=0)$('toast').textContent='';if(frames%5===0)ui.update();if(frames%10===0)updateLawHud();renderer.render(scene,camera);}
+ requestAnimationFrame(frame);
+}catch(error){console.error(error);state='error';$('error').style.display='block';$('error').textContent='3D 화면을 열지 못했습니다.\n'+error.message+'\n이 HTML 파일을 Chrome에서 다시 열어 주세요.';}
+})();
+
+
+
+
+
+</script>
+</body></html>
